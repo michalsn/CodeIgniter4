@@ -103,6 +103,12 @@ class DbUtilsTest extends CIDatabaseTestCase
 
 			$this->assertTrue($exist);
 		}
+		elseif ($this->db->DBDriver === 'OCI8')
+		{
+			$exist = $util->databaseExists('test');
+
+			$this->assertTrue($exist);
+		}
 		elseif ($this->db->DBDriver === 'SQLite3')
 		{
 			$this->expectException(DatabaseException::class);
