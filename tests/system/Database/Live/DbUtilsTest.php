@@ -70,6 +70,12 @@ class DbUtilsTest extends CIDatabaseTestCase
 
 			$this->assertTrue(in_array('test', $databases));
 		}
+		elseif ($this->db->DBDriver === 'OCI8')
+		{
+			$databases = $util->listDatabases();
+
+			$this->assertTrue(in_array('test', $databases));
+		}
 		elseif ($this->db->DBDriver === 'SQLite3')
 		{
 			$this->expectException(DatabaseException::class);
