@@ -124,6 +124,13 @@ class DbUtilsTest extends CIDatabaseTestCase
 	{
 		$util = (new Database())->loadUtils($this->db);
 
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			$this->markTestSkipped(
+			  'Unsupported feature of the oracle database platform.'
+			);
+		}
+
 		$d = $util->optimizeDatabase();
 
 		$this->assertTrue((bool)$d);
@@ -148,6 +155,13 @@ class DbUtilsTest extends CIDatabaseTestCase
 	public function testUtilsOptimizeTable()
 	{
 		$util = (new Database())->loadUtils($this->db);
+
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			$this->markTestSkipped(
+			  'Unsupported feature of the oracle database platform.'
+			);
+		}
 
 		$d = $util->optimizeTable('db_job');
 

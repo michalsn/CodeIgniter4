@@ -25,6 +25,9 @@ class ForgeTest extends CIDatabaseTestCase
 
 	public function testCreateDatabase()
 	{
+		if ($this->db->DBDriver === 'OCI8') {
+			$this->markTestSkipped('OCI8 does not support create database.');
+		}
 		$database_created = $this->forge->createDatabase('test_forge_database');
 
 		$this->assertTrue($database_created);
@@ -59,6 +62,9 @@ class ForgeTest extends CIDatabaseTestCase
 
 	public function testDropDatabase()
 	{
+		if ($this->db->DBDriver === 'OCI8') {
+			$this->markTestSkipped('OCI8 does not support drop database.');
+		}
 		if ($this->db->DBDriver === 'SQLite3')
 		{
 			$this->markTestSkipped('SQLite3 requires file path to drop database');
@@ -171,6 +177,10 @@ class ForgeTest extends CIDatabaseTestCase
 
 	public function testCreateTableWithAttributes()
 	{
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			$this->markTestSkipped('OCI8 does not support comments on tables or columns.');
+		}
 		if ($this->db->DBDriver === 'SQLite3')
 		{
 			$this->markTestSkipped('SQLite3 does not support comments on tables or columns.');
