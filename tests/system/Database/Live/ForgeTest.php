@@ -564,7 +564,12 @@ class ForgeTest extends CIDatabaseTestCase
 
 	public function testAddFields()
 	{
-		$this->forge->dropTable('forge_test_fields', true);
+		$tableName = 'forge_test_fields';
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			$tableName = 'getestfield';
+		}
+		$this->forge->dropTable($tableName, true);
 
 		$this->forge->addField([
 			'id'       => [
@@ -591,16 +596,16 @@ class ForgeTest extends CIDatabaseTestCase
 
 		$this->forge->addKey('id', true);
 		$this->forge->addUniqueKey(['username', 'active']);
-		$create = $this->forge->createTable('forge_test_fields', true);
+		$create = $this->forge->createTable($tableName, true);
 
 		//Check Field names
-		$fieldsNames = $this->db->getFieldNames('forge_test_fields');
+		$fieldsNames = $this->db->getFieldNames($tableName);
 		$this->assertContains('id', $fieldsNames);
 		$this->assertContains('username', $fieldsNames);
 		$this->assertContains('name', $fieldsNames);
 		$this->assertContains('active', $fieldsNames);
 
-		$fieldsData = $this->db->getFieldData('forge_test_fields');
+		$fieldsData = $this->db->getFieldData($tableName);
 
 		$this->assertContains($fieldsData[0]->name, ['id', 'name', 'username', 'active']);
 		$this->assertContains($fieldsData[1]->name, ['id', 'name', 'username', 'active']);
@@ -637,6 +642,16 @@ class ForgeTest extends CIDatabaseTestCase
 			$this->assertEquals(strtolower($fieldsData[1]->type), 'varchar');
 
 			$this->assertEquals($fieldsData[1]->default, null);
+		}
+		elseif ($this->db->DBDriver === 'OCI8')
+		{
+			//Check types
+			$this->assertEquals($fieldsData[0]->type, 'NUMBER');
+			$this->assertEquals($fieldsData[1]->type, 'VARCHAR2');
+
+			$this->assertEquals($fieldsData[0]->max_length, 32);
+
+			$this->assertEquals($fieldsData[1]->max_length, 255);
 		}
 		else
 		{
