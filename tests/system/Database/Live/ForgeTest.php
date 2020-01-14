@@ -657,7 +657,9 @@ class ForgeTest extends CIDatabaseTestCase
 			$this->assertEquals($fieldsData[0]->type, 'NUMBER');
 			$this->assertEquals($fieldsData[1]->type, 'VARCHAR2');
 
-			$this->assertEquals($fieldsData[0]->max_length, 32);
+			$this->assertEquals($fieldsData[0]->max_length, 11);
+
+			$this->assertSame($fieldsData[1]->default, '');
 
 			$this->assertEquals($fieldsData[1]->max_length, 255);
 		}
