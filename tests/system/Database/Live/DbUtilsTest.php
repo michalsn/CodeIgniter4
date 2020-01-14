@@ -74,7 +74,7 @@ class DbUtilsTest extends CIDatabaseTestCase
 		{
 			$databases = $util->listDatabases();
 
-			$this->assertTrue(in_array('test', $databases));
+			$this->assertTrue(in_array('TEST', $databases));
 		}
 		elseif ($this->db->DBDriver === 'SQLite3')
 		{
@@ -105,7 +105,7 @@ class DbUtilsTest extends CIDatabaseTestCase
 		}
 		elseif ($this->db->DBDriver === 'OCI8')
 		{
-			$exist = $util->databaseExists('test');
+			$exist = $util->databaseExists('TEST');
 
 			$this->assertTrue($exist);
 		}
