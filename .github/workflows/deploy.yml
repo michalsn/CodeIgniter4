@@ -15,7 +15,7 @@ jobs:
           path: source
 
       - name: Version message
-        run: echo Deploying version ${GITHUB_REF}
+        run: echo Deploying version ${GITHUB_REF##*/}
 
   framework:
     runs-on: ubuntu-latest
@@ -30,8 +30,7 @@ jobs:
           path: framework
 
       - name: Deploy framework
-        run: admin/release-framework ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/framework ${GITHUB_REF}
-        working-directory: source
+        run: source/admin/release-framework ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/framework ${GITHUB_REF##*/}
 
   appstarter:
     runs-on: ubuntu-latest
@@ -46,5 +45,4 @@ jobs:
           path: appstarter
 
       - name: Deploy appstarter
-        run: admin/release-appstarter ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/appstarter ${GITHUB_REF}
-        working-directory: source
+        run: source/admin/release-appstarter ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/appstarter ${GITHUB_REF##*/}
