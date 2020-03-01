@@ -1,16 +1,23 @@
 #!/bin/bash
 
+## Build framework distributable
+
+# Setup variables
+. admin/release-config
+
 echo $1
 echo $2
 echo $3
 pwd
 ls -la
+
+echo $CI_DIR
+echo $branch
+echo $version
+echo $RELEASE
+
 exit 1
 
-## Build framework distributable
-
-# Setup variables
-. admin/release-config
 TARGET=dist/framework
 cd $TARGET
 git checkout $branch
