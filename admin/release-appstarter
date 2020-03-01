@@ -1,5 +1,12 @@
 #!/bin/bash
 
+echo $1
+echo $2
+echo $3
+pwd
+ls -la
+exit 1
+
 ## Build app starter distributable
 
 # Setup variables
