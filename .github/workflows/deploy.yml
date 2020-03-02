@@ -24,7 +24,7 @@ jobs:
         run: pwd
 
       - name: Show files
-        run: ls -l
+        run: ls -l *
 
       - name: Deploy framework
         run: ./source/admin/release-framework ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/framework ${GITHUB_REF##*/}
@@ -43,6 +43,9 @@ jobs:
         with:
           repository: codeigniter4/appstarter
           path: appstarter
+
+      - name: Allow execution
+        run: chmod +x ./source/admin/release-appstarter
 
       - name: Deploy appstarter
         run: ${GITHUB_WORKSPACE}/source/admin/release-appstarter ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/appstarter ${GITHUB_REF##*/}
