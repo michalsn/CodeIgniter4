@@ -17,9 +17,6 @@ jobs:
       - name: Determine version
         run: echo ${GITHUB_REF##*/}
 
-      - name: Show environment
-        run: echo `pwd` "`ls`"
-
   framework:
     runs-on: ubuntu-latest
 
@@ -31,6 +28,12 @@ jobs:
         with:
           repository: codeigniter4/framework
           path: framework
+
+      - name: Show path
+        run: pwd
+
+      - name: Show files
+        run: ls -l
 
       - name: Deploy framework
         run: ./source/admin/release-framework ${GITHUB_WORKSPACE}/source ${GITHUB_WORKSPACE}/framework ${GITHUB_REF##*/}
