@@ -1,19 +1,16 @@
 #!/bin/bash
 
-echo $1
-echo $2
-echo $3
-pwd
-ls -la
-exit 1
+SOURCE=$1
+TARGET=$2
+VERSION=$3
 
 ## Build app starter distributable
 
 # Setup variables
 . admin/release-config
-TARGET=dist/appstarter
-cd $TARGET
+
 git checkout $branch
+exit 1
 
 #---------------------------------------------------
 echo -e "${BOLD}Build the framework distributable${NORMAL}"
