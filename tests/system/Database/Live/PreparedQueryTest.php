@@ -36,6 +36,13 @@ class PreparedQueryTest extends CIDatabaseTestCase
 		}
 
 		$expected = "INSERT INTO {$ec}{$pre}user{$ec} ({$ec}name{$ec}, {$ec}email{$ec}) VALUES ({$placeholders})";
+
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{	
+			$database=$this->db->getDatabase();
+			$expected = "INSERT INTO [{$database}].[dbo].[{$pre}user] ({$ec}name{$ec},{$ec}email{$ec}) VALUES ({$placeholders})";
+		}
+
 		$this->assertEquals($expected, $query->getQueryString());
 
 		$query->close();
