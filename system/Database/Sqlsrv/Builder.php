@@ -39,7 +39,8 @@
 namespace CodeIgniter\Database\Sqlsrv;
 
 use CodeIgniter\Database\BaseBuilder;
-use CodeIgniter\Database\Exceptions\DataException;
+use CodeIgniter\Database\Exceptions\DatabaseException;
+use http\Encoding\Stream\Inflate;
 
 /**
  * Builder for Sqlsrv
@@ -172,7 +173,11 @@ class Builder extends BaseBuilder {
 	// not used -> custom implementation required
 	protected function _limit(string $sql): string
 	{
-		return $sql;
+
+		// SQL Server OFFSET-FETCH can be used only with the ORDER BY clause
+		empty($this->QBOrderBy) && $sql .= ' ORDER BY 1';
+
+		return $sql . ' OFFSET ' . (int) $this->QBOffset . ' ROWS FETCH NEXT ' . $this->QBLimit . ' ROWS ONLY';
 	}
 
 	public function replace(array $set = null)
@@ -230,7 +235,8 @@ class Builder extends BaseBuilder {
 
 		$sql = (!$this->QBDistinct) ? 'SELECT ' : 'SELECT DISTINCT ';
 
-		if (!empty($this->QBLimit))
+		// Limit without offset
+		if (!empty($this->QBLimit) && empty($this->QBOffset))
 		{
 			$sql .= 'TOP ' . $this->QBLimit . ' ';
 		}
@@ -269,6 +275,12 @@ class Builder extends BaseBuilder {
 				. $this->compileGroupBy()
 				. $this->compileWhereHaving('QBHaving')
 				. $this->compileOrderBy(); // ORDER BY
+		// Limit with offset
+		if ($this->QBLimit && !empty($this->QBOffset))
+		{
+
+			return $this->_limit($sql . "\n");
+		}
 
 		return $sql;
 	}
