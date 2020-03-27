@@ -49,6 +49,7 @@ class Builder extends BaseBuilder {
 	/// TODO: auto check for TextCastToInt
 	/// TODO: auto check for InsertIndexValue
 	/// TODO: replace: delete index entries before insert
+	//--------------------------------------------------------------------
 
 	/**
 	 * ORDER BY random keyword
@@ -59,6 +60,7 @@ class Builder extends BaseBuilder {
 		'NEWID()',
 		'RAND(%d)',
 	];
+	//--------------------------------------------------------------------
 
 	/**
 	 * Quoted identifier flag
@@ -68,15 +70,17 @@ class Builder extends BaseBuilder {
 	 *
 	 * @var boolean
 	 */
-	protected $_quoted_identifier	 = true;
+	protected $_quoted_identifier = true;
 	// handle increment/decrement on text
-	public $castTextToInt			 = true;
-	public $keyPermission			 = false;
+	public $castTextToInt = true;
+	public $keyPermission = false;
 
 	protected function _truncate(string $table): string
 	{
 		return 'TRUNCATE TABLE ' . $table;
 	}
+
+	//--------------------------------------------------------------------
 
 	/**
 	 * Insert statement
@@ -102,6 +106,7 @@ class Builder extends BaseBuilder {
 		return $this->keyPermission ? $this->addIdentity($fullTableName, $statement) : $statement;
 	}
 
+	//--------------------------------------------------------------------
 	protected function _update(string $table, array $values): string
 	{
 		$valstr = [];
@@ -117,6 +122,7 @@ class Builder extends BaseBuilder {
 		return $this->keyPermission ? $this->addIdentity($this->getFullName($table), $statement) : $statement;
 	}
 
+	//--------------------------------------------------------------------
 	public function increment(string $column, int $value = 1)
 	{
 		$column = $this->db->protectIdentifiers($column);
@@ -134,6 +140,7 @@ class Builder extends BaseBuilder {
 		return $this->db->query($sql, $this->binds, false);
 	}
 
+	//--------------------------------------------------------------------
 	public function decrement(string $column, int $value = 1)
 	{
 		$column = $this->db->protectIdentifiers($column);
@@ -151,17 +158,20 @@ class Builder extends BaseBuilder {
 		return $this->db->query($sql, $this->binds, false);
 	}
 
+	//--------------------------------------------------------------------
 	private function getFullName(string $table): string
 	{
 		// TODO: replace static dbo group with config
 		return '[' . $this->db->getDatabase() . '].[dbo].[' . str_replace('"', '', $table) . ']';
 	}
 
+	//--------------------------------------------------------------------
+
 	/**
 	 * Add permision statements for index value inserts
 	 *
 	 * @param string $fullTable full table name
-	 * @param string $insert statement
+	 * @param string $insert    statement
 	 *
 	 * @return string
 	 */
@@ -170,30 +180,39 @@ class Builder extends BaseBuilder {
 		return 'SET IDENTITY_INSERT ' . $fullTable . " ON\n" . $insert . "\nSET IDENTITY_INSERT " . $fullTable . ' OFF';
 	}
 
-	// not used -> custom implementation required
+	//--------------------------------------------------------------------
+
+	/**
+	 * Platform specific limit string
+	 *
+	 * @param  string $sql
+	 * @return string
+	 */
 	protected function _limit(string $sql): string
 	{
-
 		// SQL Server OFFSET-FETCH can be used only with the ORDER BY clause
 		empty($this->QBOrderBy) && $sql .= ' ORDER BY 1';
 
 		return $sql . ' OFFSET ' . (int) $this->QBOffset . ' ROWS FETCH NEXT ' . $this->QBLimit . ' ROWS ONLY';
 	}
 
+	//--------------------------------------------------------------------
 	public function replace(array $set = null)
 	{
-		$keyPermission		 = $this->keyPermission;
+		$keyPermission = $this->keyPermission;
 		// TODO: delete old entry
 		$this->keyPermission = true;
 		$this->insert($set);
 		$this->keyPermission = $keyPermission;
 	}
 
+	//--------------------------------------------------------------------
+	//
 	// handle float return value
 	protected function maxMinAvgSum(string $select = '', string $alias = '', string $type = 'MAX')
 	{
 		// int functions can be handled by parent
-		if (!in_array($type, ['AVG']))
+		if (! in_array($type, ['AVG']))
 		{
 			return parent::maxMinAvgSum($select, $alias, $type);
 		}
@@ -215,16 +234,84 @@ class Builder extends BaseBuilder {
 
 		$sql = $type . '( CAST( ' . $this->db->protectIdentifiers(trim($select)) . ' AS FLOAT ) ) AS ' . $this->db->escapeIdentifiers(trim($alias));
 
-		$this->QBSelect[]	 = $sql;
-		$this->QBNoEscape[]	 = null;
+		$this->QBSelect[]   = $sql;
+		$this->QBNoEscape[] = null;
 
 		return $this;
 	}
 
+	//--------------------------------------------------------------------
+
 	protected function _delete(string $table): string
 	{
-		return 'DELETE' . (empty($this->QBLimit) ? '' : ' TOP ' . $this->QBLimit . '') . ' FROM ' . $table . $this->compileWhereHaving('QBWhere');
+		$sql = 'DELETE';
+
+		if (! empty($this->QBLimit))
+		{
+			$sql .= ' TOP (' . $this->QBLimit . ') ';
+
+			// unset QBLimit not to confuse _limit
+			$this->QBLimit = false;
+		}
+
+		$sql .= ' FROM ' . $table . $this->compileWhereHaving('QBWhere');
+
+		return $sql;
 	}
+
+	//--------------------------------------------------------------------
+
+	/**
+	 * Delete
+	 *
+	 * Compiles a delete string and runs the query
+	 *
+	 * @param mixed   $where      The where clause
+	 * @param integer $limit      The limit clause
+	 * @param boolean $reset_data
+	 *
+	 * @return mixed
+	 * @throws \CodeIgniter\Database\Exceptions\DatabaseException
+	 */
+	public function delete($where = '', int $limit = null, bool $reset_data = true)
+	{
+		$table = $this->db->protectIdentifiers($this->QBFrom[0], true, null, false);
+
+		if ($where !== '')
+		{
+			$this->where($where);
+		}
+
+		if (empty($this->QBWhere))
+		{
+			if (CI_DEBUG)
+			{
+				throw new DatabaseException('Deletes are not allowed unless they contain a "where" or "like" clause.');
+			}
+
+			return false;
+		}
+		if (! empty($limit))
+		{
+			$this->QBLimit = $limit;
+		}
+
+		$sql = $this->_delete($table);
+
+		if (! empty($this->QBLimit))
+		{
+			$sql = $this->_limit($sql);
+		}
+
+		if ($reset_data)
+		{
+			$this->resetWrite();
+		}
+
+		return $this->testMode ? $sql : $this->db->query($sql, $this->binds, false);
+	}
+
+	//--------------------------------------------------------------------
 
 	protected function compileSelect($select_override = false): string
 	{
@@ -233,10 +320,10 @@ class Builder extends BaseBuilder {
 			return parent::compileSelect($select_override);
 		}
 
-		$sql = (!$this->QBDistinct) ? 'SELECT ' : 'SELECT DISTINCT ';
+		$sql = (! $this->QBDistinct) ? 'SELECT ' : 'SELECT DISTINCT ';
 
 		// Limit without offset
-		if (!empty($this->QBLimit) && empty($this->QBOffset))
+		if (! empty($this->QBLimit) && empty($this->QBOffset))
 		{
 			$sql .= 'TOP ' . $this->QBLimit . ' ';
 		}
@@ -252,21 +339,21 @@ class Builder extends BaseBuilder {
 			// is because until the user calls the from() function we don't know if there are aliases
 			foreach ($this->QBSelect as $key => $val)
 			{
-				$no_escape				 = $this->QBNoEscape[$key] ?? null;
-				$this->QBSelect[$key]	 = $this->db->protectIdentifiers($val, false, $no_escape);
+				$no_escape            = $this->QBNoEscape[$key] ?? null;
+				$this->QBSelect[$key] = $this->db->protectIdentifiers($val, false, $no_escape);
 			}
 
 			$sql .= implode(', ', $this->QBSelect);
 		}
 
 		// Write the "FROM" portion of the query
-		if (!empty($this->QBFrom))
+		if (! empty($this->QBFrom))
 		{
 			$sql .= "\nFROM " . $this->_fromTables();
 		}
 
 		// Write the "JOIN" portion of the query
-		if (!empty($this->QBJoin))
+		if (! empty($this->QBJoin))
 		{
 			$sql .= "\n" . implode("\n", $this->QBJoin);
 		}
@@ -276,9 +363,8 @@ class Builder extends BaseBuilder {
 				. $this->compileWhereHaving('QBHaving')
 				. $this->compileOrderBy(); // ORDER BY
 		// Limit with offset
-		if ($this->QBLimit && !empty($this->QBOffset))
+		if ($this->QBLimit && ! empty($this->QBOffset))
 		{
-
 			return $this->_limit($sql . "\n");
 		}
 
@@ -287,7 +373,7 @@ class Builder extends BaseBuilder {
 
 	protected function whereHaving(string $qb_key, $key, $value = null, string $type = 'AND ', bool $escape = null)
 	{
-		if (!is_array($key))
+		if (! is_array($key))
 		{
 			$key = [$key => $value];
 		}
@@ -303,7 +389,7 @@ class Builder extends BaseBuilder {
 			{
 				$op = $this->getOperator($k, true);
 
-				if (!empty($op))
+				if (! empty($op))
 				{
 					$k = trim($k);
 
@@ -331,14 +417,14 @@ class Builder extends BaseBuilder {
 				if ($v instanceof Closure)
 				{
 					$builder = $this->cleanClone();
-					$v		 = '(' . str_replace("\n", ' ', $v($builder)->getCompiledSelect()) . ')';
+					$v       = '(' . str_replace("\n", ' ', $v($builder)->getCompiledSelect()) . ')';
 				}
 				else
 				{
 					$v = " :$bind:";
 				}
 			}
-			elseif (!$this->hasOperator($k) && $qb_key !== 'QBHaving')
+			elseif (! $this->hasOperator($k) && $qb_key !== 'QBHaving')
 			{
 				// value appears not to have been set, assign the test to IS NULL
 				$k .= ' IS NULL';
@@ -349,8 +435,8 @@ class Builder extends BaseBuilder {
 			}
 
 			$this->{$qb_key}[] = [
-				'condition'	 => $prefix . $k . $v,
-				'escape'	 => $escape,
+				'condition' => $prefix . $k . $v,
+				'escape'    => $escape,
 			];
 		}
 

@@ -94,10 +94,10 @@ class Result extends BaseResult implements ResultInterface {
 		$retVal = [];
 		foreach (sqlsrv_field_metadata($this->resultID) as $i => $field)
 		{
-			$retVal[$i]				 = new stdClass();
-			$retVal[$i]->name		 = $field['Name'];
-			$retVal[$i]->type		 = $field['Type'];
-			$retVal[$i]->max_length	 = $field['Size'];
+			$retVal[$i]             = new stdClass();
+			$retVal[$i]->name       = $field['Name'];
+			$retVal[$i]->type       = $field['Type'];
+			$retVal[$i]->max_length = $field['Size'];
 		}
 
 		return $retVal;
