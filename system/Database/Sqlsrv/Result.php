@@ -45,8 +45,8 @@ use stdClass;
 /**
  * Result for Sqlsrv
  */
-class Result extends BaseResult implements ResultInterface
-{
+class Result extends BaseResult implements ResultInterface {
+
 	/**
 	 * Row offset
 	 *
@@ -94,10 +94,10 @@ class Result extends BaseResult implements ResultInterface
 		$retVal = [];
 		foreach (sqlsrv_field_metadata($this->resultID) as $i => $field)
 		{
-			$retVal[$i]             = new stdClass();
-			$retVal[$i]->name       = $field['Name'];
-			$retVal[$i]->type       = $field['Type'];
-			$retVal[$i]->max_length = $field['Size'];
+			$retVal[$i]				 = new stdClass();
+			$retVal[$i]->name		 = $field['Name'];
+			$retVal[$i]->type		 = $field['Type'];
+			$retVal[$i]->max_length	 = $field['Size'];
 		}
 
 		return $retVal;
@@ -132,8 +132,7 @@ class Result extends BaseResult implements ResultInterface
 	 */
 	public function dataSeek(int $n = 0)
 	{
-		$this->rowOffset = $n;
-		return true;
+		return sqlsrv_fetch($this->resultID, SQLSRV_SCROLL_ABSOLUTE, $n - 1);
 	}
 
 	//--------------------------------------------------------------------
@@ -165,7 +164,7 @@ class Result extends BaseResult implements ResultInterface
 	protected function fetchObject(string $className = 'stdClass')
 	{
 		//return sqlsrv_fetch_object($this->resultID, $className, null, SQLSRV_SCROLL_RELATIVE, $this->rowOffset );
-		return sqlsrv_fetch_object($this->resultID, $className );
+		return sqlsrv_fetch_object($this->resultID, $className);
 	}
 
 	//--------------------------------------------------------------------
