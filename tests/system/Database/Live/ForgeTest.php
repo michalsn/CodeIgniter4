@@ -1,4 +1,6 @@
-<?php namespace CodeIgniter\Database\Live;
+<?php
+
+namespace CodeIgniter\Database\Live;
 
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Database\Forge;
@@ -7,11 +9,11 @@ use CodeIgniter\Test\CIDatabaseTestCase;
 /**
  * @group DatabaseLive
  */
-class ForgeTest extends CIDatabaseTestCase
-{
-	protected $refresh = true;
+class ForgeTest extends CIDatabaseTestCase {
 
-	protected $seed = 'Tests\Support\Database\Seeds\CITestSeeder';
+	protected $refresh = true;
+	protected $seed    = 'Tests\Support\Database\Seeds\CITestSeeder';
+
 	/**
 	 * @var \CodeIgniter\Database\Forge
 	 */
@@ -490,8 +492,8 @@ class ForgeTest extends CIDatabaseTestCase
 		$this->forge->addColumn('forge_test_table', $newField);
 
 		$fieldNames = $this->db->table('forge_test_table')
-							   ->get()
-							   ->getFieldNames();
+				->get()
+				->getFieldNames();
 
 		$this->forge->dropTable('forge_test_table', true);
 
@@ -574,6 +576,16 @@ class ForgeTest extends CIDatabaseTestCase
 
 			$this->assertEquals($fieldsData[1]->default, null);
 		}
+		elseif ($this->db->DBDriver === 'Sqlsrv')
+		{
+			//Check types
+			$this->assertEquals($fieldsData[0]->type, 'int');
+			$this->assertEquals($fieldsData[0]->max_length, 10);
+
+			$this->assertEquals($fieldsData[1]->type, 'varchar');
+			$this->assertNull($fieldsData[1]->default);
+			$this->assertEquals($fieldsData[1]->max_length, 255);
+		}
 		else
 		{
 			$this->assertTrue(false, 'DB Driver not supported');
@@ -645,6 +657,20 @@ class ForgeTest extends CIDatabaseTestCase
 			$this->assertEquals($keys['db_forge_test_1_code_company']->fields, ['code', 'company']);
 			$this->assertEquals($keys['db_forge_test_1_code_active']->name, 'db_forge_test_1_code_active');
 			$this->assertEquals($keys['db_forge_test_1_code_active']->fields, ['code', 'active']);
+		}
+		elseif ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->assertEquals($keys['pk_db_forge_test_1']->name, 'pk_db_forge_test_1');
+			$this->assertEquals($keys['pk_db_forge_test_1']->fields, ['id']);
+			$this->assertEquals($keys['pk_db_forge_test_1']->type, 'PRIMARY');
+
+			$this->assertEquals($keys['db_forge_test_1_code_company']->name, 'db_forge_test_1_code_company');
+			$this->assertEquals($keys['db_forge_test_1_code_company']->fields, ['code', 'company']);
+			$this->assertEquals($keys['db_forge_test_1_code_company']->type, 'INDEX');
+
+			$this->assertEquals($keys['db_forge_test_1_code_active']->name, 'db_forge_test_1_code_active');
+			$this->assertEquals($keys['db_forge_test_1_code_active']->fields, ['code', 'active']);
+			$this->assertEquals($keys['db_forge_test_1_code_active']->type, 'UNIQUE');
 		}
 
 		$this->forge->dropTable('forge_test_1', true);
@@ -788,11 +814,27 @@ class ForgeTest extends CIDatabaseTestCase
 
 		$this->assertTrue($this->db->fieldExists('name', 'forge_test_two'));
 
-		$this->forge->dropColumn('forge_test_two', ['id', 'name']);
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->forge->dropColumn('forge_test_two', ['name', 'email']);
+		}
+		else
+		{
+			$this->forge->dropColumn('forge_test_two', ['id', 'name']);
+		}
 
 		$this->db->resetDataCache();
 
-		$this->assertFalse($this->db->fieldExists('id', 'forge_test_two'));
+		// Sqlsrv does not support dropping columns that are part of the primary key
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->assertFalse($this->db->fieldExists('email', 'forge_test_two'));
+		}
+		else
+		{
+			$this->assertFalse($this->db->fieldExists('id', 'forge_test_two'));
+		}
+
 		$this->assertFalse($this->db->fieldExists('name', 'forge_test_two'));
 
 		$this->forge->dropTable('forge_test_two', true);
@@ -826,13 +868,28 @@ class ForgeTest extends CIDatabaseTestCase
 
 		$this->assertTrue($this->db->fieldExists('name', 'forge_test_four'));
 
-		$this->forge->dropColumn('forge_test_four', 'id, name');
-
+		// Sqlsrv does not support dropping columns that are part of the primary key
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->forge->dropColumn('forge_test_four', 'email, name');
+		}
+		else
+		{
+			$this->forge->dropColumn('forge_test_four', 'id, name');
+		}
 		$this->db->resetDataCache();
 
-		$this->assertFalse($this->db->fieldExists('id', 'forge_test_four'));
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->assertFalse($this->db->fieldExists('email', 'forge_test_four'));
+		}
+		else
+		{
+			$this->assertFalse($this->db->fieldExists('id', 'forge_test_four'));
+		}
 		$this->assertFalse($this->db->fieldExists('name', 'forge_test_four'));
 
 		$this->forge->dropTable('forge_test_four', true);
 	}
+
 }
