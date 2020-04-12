@@ -123,13 +123,13 @@ class Connection extends BaseConnection implements ConnectionInterface {
 		$charset = in_array(strtolower($this->charset), ['utf-8', 'utf8'], true) ? 'UTF-8' : SQLSRV_ENC_CHAR;
 
 		$connection = [
-			'UID'					 => empty($this->username) ? '' : $this->username,
-			'PWD'					 => empty($this->password) ? '' : $this->password,
-			'Database'				 => $this->database,
-			'ConnectionPooling'		 => ($persistent === true) ? 1 : 0,
-			'CharacterSet'			 => $charset,
-			'Encrypt'				 => ($this->encrypt === true) ? 1 : 0,
-			'ReturnDatesAsStrings'	 => 1,
+			'UID'                  => empty($this->username) ? '' : $this->username,
+			'PWD'                  => empty($this->password) ? '' : $this->password,
+			'Database'             => $this->database,
+			'ConnectionPooling'    => ($persistent === true) ? 1 : 0,
+			'CharacterSet'         => $charset,
+			'Encrypt'              => ($this->encrypt === true) ? 1 : 0,
+			'ReturnDatesAsStrings' => 1,
 		];
 
 		// If the username and password are both empty, assume this is a
@@ -145,11 +145,11 @@ class Connection extends BaseConnection implements ConnectionInterface {
 			sqlsrv_configure('WarningsReturnAsErrors', 0);
 
 			// Determine how identifiers are escaped
-			$query	 = $this->query('SELECT CASE WHEN (@@OPTIONS | 256) = @@OPTIONS THEN 1 ELSE 0 END AS qi');
-			$query	 = $query->getResultObject();
+			$query = $this->query('SELECT CASE WHEN (@@OPTIONS | 256) = @@OPTIONS THEN 1 ELSE 0 END AS qi');
+			$query = $query->getResultObject();
 
-			$this->_quoted_identifier	 = empty($query) ? false : (bool) $query[0]->qi;
-			$this->escapeChar			 = ($this->_quoted_identifier) ? '"' : ['[', ']'];
+			$this->_quoted_identifier = empty($query) ? false : (bool) $query[0]->qi;
+			$this->escapeChar         = ($this->_quoted_identifier) ? '"' : ['[', ']'];
 		}
 
 		return $this->connID;
@@ -265,11 +265,10 @@ class Connection extends BaseConnection implements ConnectionInterface {
 		$retVal = [];
 		foreach ($query as $row)
 		{
-			$obj		 = new stdClass();
-			$obj->name	 = $row->index_name;
-			$_fields	 = explode(',', trim($row->index_keys));
-			$obj->fields = array_map(function ($v)
-			{
+			$obj         = new stdClass();
+			$obj->name   = $row->index_name;
+			$_fields     = explode(',', trim($row->index_keys));
+			$obj->fields = array_map(function ($v) {
 				return trim($v);
 			}, $_fields);
 
@@ -326,13 +325,13 @@ class Connection extends BaseConnection implements ConnectionInterface {
 		$retVal = [];
 		foreach ($query as $row)
 		{
-			$obj						 = new stdClass();
-			$obj->constraint_name		 = $row->constraint_name;
-			$obj->table_name			 = $row->table_name;
-			$obj->column_name			 = $row->column_name;
-			$obj->foreign_table_name	 = $row->foreign_table_name;
-			$obj->foreign_column_name	 = $row->foreign_column_name;
-			$retVal[]					 = $obj;
+			$obj                      = new stdClass();
+			$obj->constraint_name     = $row->constraint_name;
+			$obj->table_name          = $row->table_name;
+			$obj->column_name         = $row->column_name;
+			$obj->foreign_table_name  = $row->foreign_table_name;
+			$obj->foreign_column_name = $row->foreign_column_name;
+			$retVal[]                 = $obj;
 		}
 
 		return $retVal;
@@ -386,11 +385,11 @@ class Connection extends BaseConnection implements ConnectionInterface {
 		$retVal = [];
 		for ($i = 0, $c = count($query); $i < $c; $i++)
 		{
-			$retVal[$i]				 = new stdClass();
-			$retVal[$i]->name		 = $query[$i]->COLUMN_NAME;
-			$retVal[$i]->type		 = $query[$i]->DATA_TYPE;
-			$retVal[$i]->default	 = $query[$i]->COLUMN_DEFAULT;
-			$retVal[$i]->max_length	 = $query[$i]->CHARACTER_MAXIMUM_LENGTH > 0 ? $query[$i]->CHARACTER_MAXIMUM_LENGTH : $query[$i]->NUMERIC_PRECISION;
+			$retVal[$i]              = new stdClass();
+			$retVal[$i]->name        = $query[$i]->COLUMN_NAME;
+			$retVal[$i]->type        = $query[$i]->DATA_TYPE;
+			$retVal[$i]->default     = $query[$i]->COLUMN_DEFAULT;
+			$retVal[$i]->max_length  = $query[$i]->CHARACTER_MAXIMUM_LENGTH > 0 ? $query[$i]->CHARACTER_MAXIMUM_LENGTH : $query[$i]->NUMERIC_PRECISION;
 			$retVal[$i]->primary_key = (int) $query[$i]->PRIMARY_KEY;
 		}
 
@@ -447,13 +446,13 @@ class Connection extends BaseConnection implements ConnectionInterface {
 	public function error(): array
 	{
 		$error = [
-			'code'		 => '00000',
-			'message'	 => '',
+			'code'    => '00000',
+			'message' => '',
 		];
 
 		$sqlsrv_errors = sqlsrv_errors(SQLSRV_ERR_ERRORS);
 
-		if (!is_array($sqlsrv_errors))
+		if (! is_array($sqlsrv_errors))
 		{
 			return $error;
 		}
@@ -511,7 +510,7 @@ class Connection extends BaseConnection implements ConnectionInterface {
 
 		if ($this->execute('USE ' . $this->_escapeString($databaseName)))
 		{
-			$this->database	 = $databaseName;
+			$this->database  = $databaseName;
 			$this->dataCache = [];
 			return true;
 		}
@@ -555,13 +554,13 @@ class Connection extends BaseConnection implements ConnectionInterface {
 	 */
 	public function getError()
 	{
-		$error			 = [
-			'code'		 => '00000',
-			'message'	 => '',
+		$error         = [
+			'code'    => '00000',
+			'message' => '',
 		];
-		$sqlsrv_errors	 = sqlsrv_errors(SQLSRV_ERR_ERRORS);
+		$sqlsrv_errors = sqlsrv_errors(SQLSRV_ERR_ERRORS);
 
-		if (!is_array($sqlsrv_errors))
+		if (! is_array($sqlsrv_errors))
 		{
 			return $error;
 		}
@@ -610,7 +609,7 @@ class Connection extends BaseConnection implements ConnectionInterface {
 			return $this->dataCache['version'];
 		}
 
-		if (!$this->connID || ( $info = sqlsrv_server_info($this->connID)) === false)
+		if (! $this->connID || ( $info = sqlsrv_server_info($this->connID)) === false)
 		{
 			return false;
 		}
