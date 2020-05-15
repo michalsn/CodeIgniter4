@@ -1,4 +1,6 @@
-<?php namespace CodeIgniter\Database\Live;
+<?php
+
+namespace CodeIgniter\Database\Live;
 
 use CodeIgniter\Database\Database;
 use CodeIgniter\Database\Exceptions\DatabaseException;
@@ -7,10 +9,9 @@ use CodeIgniter\Test\CIDatabaseTestCase;
 /**
  * @group DatabaseLive
  */
-class DbUtilsTest extends CIDatabaseTestCase
-{
-	protected $refresh = true;
+class DbUtilsTest extends CIDatabaseTestCase {
 
+	protected $refresh = true;
 	protected $seed = 'Tests\Support\Database\Seeds\CITestSeeder';
 
 	//--------------------------------------------------------------------
@@ -114,7 +115,7 @@ class DbUtilsTest extends CIDatabaseTestCase
 
 		$d = $util->optimizeDatabase();
 
-		$this->assertTrue((bool)$d);
+		$this->assertTrue((bool) $d);
 	}
 
 	//--------------------------------------------------------------------
@@ -139,13 +140,13 @@ class DbUtilsTest extends CIDatabaseTestCase
 
 		$d = $util->optimizeTable('db_job');
 
-		if ($this->db->DBDriver === 'Postgre' || $this->db->DBDriver === 'SQLite3')
+		if ($this->db->DBDriver === 'Postgre' || $this->db->DBDriver === 'SQLite3' || $this->db->DBDriver === 'Sqlsrv')
 		{
-			$this->assertFalse((bool)$d);
+			$this->assertFalse((bool) $d);
 		}
 		else
 		{
-			$this->assertTrue((bool)$d);
+			$this->assertTrue((bool) $d);
 		}
 	}
 
@@ -180,7 +181,7 @@ class DbUtilsTest extends CIDatabaseTestCase
 	public function testUtilsCSVFromResult()
 	{
 		$data = $this->db->table('job')
-						 ->get();
+				->get();
 
 		$util = (new Database())->loadUtils($this->db);
 
@@ -196,8 +197,8 @@ class DbUtilsTest extends CIDatabaseTestCase
 	public function testUtilsXMLFromResult()
 	{
 		$data = $this->db->table('job')
-						 ->where('id', 4)
-						 ->get();
+				->where('id', 4)
+				->get();
 
 		$util = (new Database())->loadUtils($this->db);
 
@@ -205,8 +206,8 @@ class DbUtilsTest extends CIDatabaseTestCase
 
 		$expected = '<root><element><id>4</id><name>Musician</name><description>Only Coldplay can actually called Musician</description><created_at></created_at><updated_at></updated_at><deleted_at></deleted_at></element></root>';
 
-		$actual = preg_replace('#\R+#', '', $data);
-		$actual = preg_replace('/[ ]{2,}|[\t]/', '', $actual);
+		$actual	 = preg_replace('#\R+#', '', $data);
+		$actual	 = preg_replace('/[ ]{2,}|[\t]/', '', $actual);
 
 		$this->assertEquals($expected, $actual);
 	}
