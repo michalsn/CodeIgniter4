@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  sqlite3_tests:
+  sqlite_tests:
     runs-on: ubuntu-latest
 
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
@@ -62,6 +62,8 @@ jobs:
 
       - name: Test with phpunit
         run: vendor/bin/phpunit --coverage-text
+        env:
+          DB: sqlite
 
 
   mysqli_tests:
@@ -126,6 +128,7 @@ jobs:
       - name: Test with phpunit
         run: vendor/bin/phpunit --coverage-text
         env:
+          DB: mysqli
           database.tests.port: ${{ job.services.mysql.ports[3306] }}
 
 
@@ -191,4 +194,5 @@ jobs:
       - name: Test with phpunit
         run: vendor/bin/phpunit --coverage-text
         env:
+          DB: postgres
           database.tests.port: ${{ job.services.postgres.ports[6379] }}
