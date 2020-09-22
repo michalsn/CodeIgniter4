@@ -4,7 +4,7 @@ $dbconfig = [
 
    'mysqli'   => [
 	   'DSN'      => '',
-	   'hostname' => 'mysql',
+	   'hostname' => 'localhost',
 	   'username' => 'mysql',
 	   'password' => 'mysql',
 	   'database' => 'test',
@@ -23,7 +23,7 @@ $dbconfig = [
 
    'postgres' => [
 	   'DSN'      => '',
-	   'hostname' => 'postgres',
+	   'hostname' => 'localhost',
 	   'username' => 'postgres',
 	   'password' => 'postgres',
 	   'database' => 'test',
