@@ -76,7 +76,6 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_USER: mysql
           MYSQL_DATABASE: test
         ports:
           - 3306:3306
@@ -141,7 +140,6 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: test
         ports:
@@ -156,7 +154,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
+        php-versions: ['7.4']
 
     name: PHP ${{ matrix.php-versions }} - Postgres
 
