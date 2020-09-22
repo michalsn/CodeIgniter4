@@ -676,7 +676,19 @@ class CLI
 			// @codeCoverageIgnoreEnd
 		}
 
-		return static::streamSupports('stream_isatty', $resource);
+		if (static::streamSupports('stream_isatty', $resource))
+		{
+			return true;
+		}
+
+		if (static::streamSupports('fstat', $resource))
+		{
+			$stat = @\fstat($resource);
+
+			return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
+		}
+
+		return false;
 	}
 
 	//--------------------------------------------------------------------
