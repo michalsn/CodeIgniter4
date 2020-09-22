@@ -93,9 +93,9 @@ class Database extends Config
 			// so that we can test against multiple databases.
 			if ($group = getenv('DB'))
 			{
-				if (is_file(TESTPATH . 'travis/Database.php'))
+				if (is_file(TESTPATH . '_github/Database.php'))
 				{
-					require TESTPATH . 'travis/Database.php';
+					require TESTPATH . '_github/Database.php';
 
 					if (! empty($dbconfig) && array_key_exists($group, $dbconfig))
 					{
