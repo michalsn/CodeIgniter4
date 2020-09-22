@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
+        php-versions: ['7.4']
 
     name: PHP ${{ matrix.php-versions }} - SQLite3
 
@@ -38,7 +38,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl, phpunit
-          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd
+          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd, readline
           coverage: xdebug
 
       - name: Install memcached
@@ -89,7 +89,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
+        php-versions: ['7.4']
 
     name: PHP ${{ matrix.php-versions }} - MySQLi
 
@@ -102,7 +102,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl, phpunit
-          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd, mysqli
+          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd, mysqli, readline
           coverage: xdebug
 
       - name: Install memcached
@@ -167,7 +167,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl, phpunit
-          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd, postgres
+          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd, postgres, readline
           coverage: xdebug
 
       - name: Install memcached
