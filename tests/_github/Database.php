@@ -19,6 +19,7 @@ $dbconfig = [
 	   'compress' => false,
 	   'strictOn' => false,
 	   'failover' => [],
+	   'port'     => 3306,
    ],
 
    'postgres' => [
@@ -38,6 +39,7 @@ $dbconfig = [
 	   'compress' => false,
 	   'strictOn' => false,
 	   'failover' => [],
+	   'port'     => 5432,
    ],
 
    'sqlite'   => [
@@ -57,6 +59,7 @@ $dbconfig = [
 	   'compress' => false,
 	   'strictOn' => false,
 	   'failover' => [],
+	   'port'     => 3306,
    ],
 
 ];
