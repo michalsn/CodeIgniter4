@@ -79,7 +79,7 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with phpunit
-        run: script -e -c vendor/bin/phpunit --coverage-text --testsuite cli
+        run: script -e -c "vendor/bin/phpunit --coverage-text --testsuite cli"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm256
