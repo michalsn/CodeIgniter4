@@ -42,8 +42,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
-        db-platforms: ['sqlite', 'mysqli', 'postgres']
+        php-versions: ['7.4']
+        db-platforms: ['sqlite']
 
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
@@ -79,7 +79,7 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with PHPUnit
-        run: script -e -c "vendor/bin/phpunit --coverage-text"
+        run: script -e -c "vendor/bin/phpunit -v --coverage-text"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
