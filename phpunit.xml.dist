@@ -17,9 +17,6 @@
 		<testsuite name="database">
 			<directory>./tests/system/Database</directory>
 		</testsuite>
-		<testsuite name="cli">
-			<directory>./tests/system/CLI/CLITest.php</directory>
-		</testsuite>
 	</testsuites>
 
 	<filter>
