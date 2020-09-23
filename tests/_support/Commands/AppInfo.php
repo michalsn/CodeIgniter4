@@ -24,7 +24,7 @@ class AppInfo extends BaseCommand
 		{
 			CLI::color('test', 'white', 'Background');
 		}
-		catch (\RuntimeException $oops)
+		catch (\Exception $oops)
 		{
 			$this->showError($oops);
 		}
