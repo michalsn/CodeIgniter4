@@ -57,7 +57,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl, phpunit
           extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd
-          coverage: xdebug
+          coverage: pcov
 
       - name: Install memcached
         uses: niden/actions-memcached@v7
