@@ -414,7 +414,7 @@ class CLI
 	 */
 	public static function beep(int $num = 1)
 	{
-		echo str_repeat("\x07", $num);
+		static::print(str_repeat("\x07", $num));
 	}
 
 	//--------------------------------------------------------------------
