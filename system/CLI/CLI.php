@@ -630,7 +630,7 @@ class CLI
 			// In the current setup of the tests we cannot fully check
 			// if the stream supports the function since we are using
 			// filtered streams.
-			return function_exists($function);
+			//return function_exists($function);
 		}
 
 		// @codeCoverageIgnoreStart
