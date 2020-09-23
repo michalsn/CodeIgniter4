@@ -78,11 +78,12 @@ jobs:
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
+      - name: Environment
+        run: echo "export [[ $- == *i* ]] && stty -ixon" > ~/.bashrc
+        env:
+          TERM: xterm-256color
+
       - name: Test with phpunit
+        run: vendor/bin/phpunit --coverage-text --testsuite cli
         env:
           DB: ${{ matrix.db-platforms }}
-          TERM: xterm-256color
-        run: |
-        echo "export [[ $- == *i* ]] && stty -ixon" > ~/.bashrc
-        vendor/bin/phpunit --coverage-text --testsuite cli
-        
