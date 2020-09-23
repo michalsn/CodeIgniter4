@@ -48,9 +48,6 @@ jobs:
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
     steps:
-      - name: Install Memcached
-        uses: niden/actions-memcached@v7
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -58,9 +55,12 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: composer, pecl, phpunit:8.5.8
+          tools: composer, pecl
           extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd
           coverage: none
+
+      - name: Install memcached
+        uses: niden/actions-memcached@v7
 
       - name: Get composer cache directory
         id: composer-cache
