@@ -57,7 +57,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer
           extensions: imagick
-          coverage: none
+          coverage: xdebug
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
@@ -82,6 +82,7 @@ jobs:
         run: script -e -c "vendor/bin/phpunit --coverage-text"
         env:
           DB: ${{ matrix.db-platforms }}
+          TERM: xterm256
 
       #- if: success()
       #  run: php tests/bin/php-coveralls.phar -v
