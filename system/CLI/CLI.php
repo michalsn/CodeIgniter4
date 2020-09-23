@@ -466,7 +466,7 @@ class CLI
 	 */
 	public static function isWindows(): bool
 	{
-		return stripos(PHP_OS, 'WIN') === 0;
+		return DIRECTORY_SEPARATOR === '\\';
 	}
 
 	//--------------------------------------------------------------------
