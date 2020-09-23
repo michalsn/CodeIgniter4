@@ -414,7 +414,7 @@ class CLI
 	 */
 	public static function beep(int $num = 1)
 	{
-		static::print(str_repeat("\x07", $num));
+		echo str_repeat("\x07", $num);
 	}
 
 	//--------------------------------------------------------------------
@@ -466,7 +466,7 @@ class CLI
 	 */
 	public static function isWindows(): bool
 	{
-		return DIRECTORY_SEPARATOR === '\\';
+		return stripos(PHP_OS, 'WIN') === 0;
 	}
 
 	//--------------------------------------------------------------------
