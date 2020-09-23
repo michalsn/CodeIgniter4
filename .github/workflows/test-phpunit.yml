@@ -79,6 +79,6 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Test with phpunit
-        run: vendor/bin/phpunit -v --no-coverage --colors always tests/system/Commands/
+        run: vendor/bin/phpunit -v --colors
         env:
           DB: ${{ matrix.db-platforms }}
