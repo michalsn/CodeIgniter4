@@ -83,3 +83,4 @@ jobs:
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
+          stty: -ixon
