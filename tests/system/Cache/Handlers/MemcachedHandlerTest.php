@@ -132,7 +132,7 @@ class MemcachedHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 
 		$actual = $this->memcachedHandler->getMetaData(self::$key1);
 		$this->assertLessThanOrEqual(60, $actual['expire'] - $time);
-		$this->assertLessThanOrEqual(0, $actual['mtime'] - $time);
+		$this->assertLessThanOrEqual(1, $actual['mtime'] - $time);
 		$this->assertSame('value', $actual['data']);
 	}
 

@@ -82,7 +82,7 @@ jobs:
         run: script -e -c "vendor/bin/phpunit --coverage-text"
         env:
           DB: ${{ matrix.db-platforms }}
-          TERM: xterm256
+          TERM: xterm-256color
 
       #- if: success()
       #  run: php tests/bin/php-coveralls.phar -v
