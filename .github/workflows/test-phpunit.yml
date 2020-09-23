@@ -79,9 +79,8 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with phpunit
-        run: |
-          echo "export [[ $- == *i* ]] && stty -ixon" > ~/.bashrc
-          vendor/bin/phpunit --coverage-text --testsuite cli
+        run: vendor/bin/phpunit --coverage-text --testsuite cli
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
+          tty: true
