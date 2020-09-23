@@ -56,7 +56,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl, phpunit
-          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd
+          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd, streams
           coverage: pcov
 
       - name: Install memcached
