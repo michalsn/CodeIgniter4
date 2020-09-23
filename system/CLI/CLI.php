@@ -630,7 +630,7 @@ class CLI
 			// In the current setup of the tests we cannot fully check
 			// if the stream supports the function since we are using
 			// filtered streams.
-			//return function_exists($function);
+			return function_exists($function);
 		}
 
 		// @codeCoverageIgnoreStart
@@ -676,19 +676,7 @@ class CLI
 			// @codeCoverageIgnoreEnd
 		}
 
-		if (static::streamSupports('stream_isatty', $resource))
-		{
-			return true;
-		}
-
-		if (static::streamSupports('fstat', $resource))
-		{
-			$stat = @\fstat($resource);
-
-			return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
-		}
-
-		return false;
+		return static::streamSupports('stream_isatty', $resource);
 	}
 
 	//--------------------------------------------------------------------
