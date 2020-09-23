@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.4']
+        php-versions: ['7.2']
         db-platforms: ['sqlite']
 
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
@@ -56,7 +56,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
-          extensions: intl, json, mbstring, mysqlnd, xdebug, xml, imagick, gd
+          extensions: imagick
           coverage: none
 
       - name: Install memcached
