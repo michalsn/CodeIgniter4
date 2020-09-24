@@ -42,9 +42,9 @@ jobs:
           SA_PASSWORD: mssql
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
-        host: mssql
         ports:
           - 1433:1433
+        options: --name mssql -h mssql
 
       redis:
         image: redis
