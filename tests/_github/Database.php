@@ -44,10 +44,10 @@ $dbconfig = [
 
    'sqlsrv'   => [
 	   'DSN'      => '',
-	   'hostname' => 'localhost',
+	   'hostname' => '127.0.0.1',
 	   'username' => 'sa',
 	   'password' => 'mssql',
-	   'database' => 'mssql',
+	   'database' => 'master',
 	   'DBDriver' => 'Sqlsrv',
 	   'DBPrefix' => 'db_',
 	   'pConnect' => false,
