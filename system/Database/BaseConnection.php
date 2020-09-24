@@ -364,6 +364,7 @@ abstract class BaseConnection implements ConnectionInterface
 		catch (\Throwable $e)
 		{
 			log_message('error', 'Error connecting to the database: ' . $e->getMessage());
+			d($e->getMessage());
 		}
 
 		// No connection resource? Check if there is a failover else throw an error
