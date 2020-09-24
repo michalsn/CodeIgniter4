@@ -12,6 +12,7 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
 
@@ -33,6 +34,13 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
+      mssql:
+        image: microsoft/mssql-server-linux:2017-latest
+        env:
+          SA_PASSWORD: mssql
+          ACCEPT_EULA: Y
+        ports:
+          - 1433:1433
       redis:
         image: redis
         ports:
@@ -43,9 +51,7 @@ jobs:
       fail-fast: true
       matrix:
         php-versions: ['7.4']
-        db-platforms: ['sqlite']
-
-    name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
+        db-platforms: ['sqlsrv']
 
     steps:
       - name: Checkout
@@ -62,8 +68,8 @@ jobs:
       - name: Install Memcached
         uses: niden/actions-memcached@v7
 
-      - name: Start Docker for MSSql
-        run: docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=mssql' -e 'MSSQL_PID=Developer' -p 1433:1433 --name mssql -h mssql -d mcr.microsoft.com/mssql/server:2017-latest
+      #- name: Start Docker for MSSql
+      #  run: docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=mssql' -e 'MSSQL_PID=Developer' -p 1433:1433 --name mssql -h mssql -d mcr.microsoft.com/mssql/server:2017-latest
 
       - name: Get composer cache directory
         id: composer-cache
