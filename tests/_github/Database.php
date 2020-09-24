@@ -48,7 +48,7 @@ $dbconfig = [
 	   'username' => 'mssql',
 	   'password' => 'mssql',
 	   'database' => 'mssql',
-	   'DBDriver' => 'Sqlrv',
+	   'DBDriver' => 'Sqlsrv',
 	   'DBPrefix' => 'db_',
 	   'pConnect' => false,
 	   'DBDebug'  => (ENVIRONMENT !== 'production'),
