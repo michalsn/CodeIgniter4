@@ -44,7 +44,7 @@ $dbconfig = [
 
    'sqlsrv'   => [
 	   'DSN'      => '',
-	   'hostname' => '127.0.0.1',
+	   'hostname' => 'mssql',
 	   'username' => 'sa',
 	   'password' => 'mssql',
 	   'database' => 'master',
