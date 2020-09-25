@@ -406,6 +406,7 @@ abstract class BaseConnection implements ConnectionInterface
 			// We still don't have a connection?
 			if (! $this->connID)
 			{
+				d($this->error());
 				throw new DatabaseException('Unable to connect to the database.');
 			}
 		}
