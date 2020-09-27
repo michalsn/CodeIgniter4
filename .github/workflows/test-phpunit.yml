@@ -86,8 +86,12 @@ jobs:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
 
-      - name: Run Codecov
+      - name: Run Coveralls
         if: ${{ success() }}
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./build/logs/clover.xml
+        run: php tests/bin/php-coveralls.phar -v
+
+      #- name: Run Codecov
+      #  if: ${{ success() }}
+      #  uses: codecov/codecov-action@v1
+      #  with:
+      #    file: ./build/logs/clover.xml
