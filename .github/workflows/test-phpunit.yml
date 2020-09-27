@@ -85,6 +85,6 @@ jobs:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
 
-      #- if: success()
-      #  run: php tests/bin/php-coveralls.phar -v
+      if: success()
+        run: php tests/bin/php-coveralls.phar -v
 
