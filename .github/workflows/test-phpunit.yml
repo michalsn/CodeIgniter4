@@ -81,7 +81,9 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with PHPUnit
-        run: script -e -c "vendor/bin/phpunit --prepend tests/_phpunit/xdebug-filter.php -v"
+        run: |
+          vendor/bin/phpunit --dump-xdebug-filter build/xdebug-filter.php
+          script -e -c "vendor/bin/phpunit --prepend build/xdebug-filter.php -v"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
