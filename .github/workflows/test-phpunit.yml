@@ -1,4 +1,4 @@
-name: PHP Tests
+name: Test Framework
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.4']
+        php-versions: ['8.0']
         db-platforms: ['sqlite']
 
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
@@ -80,7 +80,7 @@ jobs:
 
       - name: Test with PHPUnit
         #run: script -e -c "vendor/bin/phpunit -v --coverage-text"
-        run: vendor/bin/phpunit -v --ansi --coverage-text
+        run: vendor/bin/phpunit -v --coverage-text
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
