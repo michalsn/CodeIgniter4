@@ -88,6 +88,7 @@ jobs:
 
       - name: Run Codecov
         uses: codecov/codecov-action@v1
+        file: ./build/logs/clover.xml
       #- name: Run Coveralls
       #  if: ${{ success() }}
       #  uses: coverallsapp/github-action@master
