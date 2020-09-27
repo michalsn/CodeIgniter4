@@ -1,4 +1,6 @@
-<?php namespace CodeIgniter\Commands;
+<?php
+
+namespace CodeIgniter\Commands;
 
 use CodeIgniter\Cache\CacheFactory;
 use CodeIgniter\Test\CIUnitTestCase;
@@ -8,7 +10,6 @@ use Config\Services;
 class InfoCacheTest extends CIUnitTestCase
 {
 	protected $streamFilter;
-	protected $result;
 
 	protected function setUp(): void
 	{
@@ -24,12 +25,10 @@ class InfoCacheTest extends CIUnitTestCase
 
 	public function tearDown(): void
 	{
-		if (! $this->result)
-		{
-			return;
-		}
-
 		stream_filter_remove($this->streamFilter);
+
+		// restore default cache handler
+		config('Cache')->handler = 'file';
 	}
 
 	protected function getBuffer()
@@ -37,19 +36,18 @@ class InfoCacheTest extends CIUnitTestCase
 		return CITestStreamFilter::$buffer;
 	}
 
-	public function testInfoCacheInvalidHandler()
+	public function testInfoCacheErrorsOnInvalidHandler()
 	{
-		command('cache:info notfound');
+		config('Cache')->handler = 'redis';
+		cache()->save('foo', 'bar');
+		command('cache:info');
 
-		$result = CITestStreamFilter::$buffer;
-
-		$this->assertStringContainsString('notfound is not a valid cache handler.', $result);
+		$this->assertStringContainsString('This command only supports the file cache handler.', $this->getBuffer());
 	}
 
 	public function testInfoCacheCanSeeFoo()
 	{
 		cache()->save('foo', 'bar');
-
 		command('cache:info');
 
 		$this->assertStringContainsString('foo', $this->getBuffer());
@@ -68,7 +66,6 @@ class InfoCacheTest extends CIUnitTestCase
 	public function testInfoCacheCannotSeeFoo()
 	{
 		cache()->delete('foo');
-
 		command('cache:info');
 
 		$this->assertStringNotContainsString ('foo', $this->getBuffer());
