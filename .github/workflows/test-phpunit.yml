@@ -15,6 +15,14 @@ jobs:
 
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
 
+    name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php-versions: ['7.4']
+        db-platforms: ['sqlite']
+
     services:
       mysql:
         image: mysql:5.7
@@ -39,14 +47,6 @@ jobs:
           - 6379:6379
         options: --health-cmd "redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    strategy:
-      fail-fast: true
-      matrix:
-        php-versions: ['7.4']
-        db-platforms: ['sqlite']
-
-    name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -58,6 +58,7 @@ jobs:
           tools: composer:v2
           extensions: imagick
           coverage: pcov
+          ini-values: pcov.directory=system
         env:
           update: true
 
@@ -81,7 +82,7 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with PHPUnit
-        run: script -e -c "vendor/bin/phpunit -v --coverage-text"
+        run: php vendor/bin/phpunit -v
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
