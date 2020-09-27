@@ -16,10 +16,10 @@ jobs:
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         php-versions: ['7.2']
-        db-platforms: ['sqlite']
+        db-platforms: ['sqlite', 'mysqli', 'postgres']
 
     services:
       mysql:
