@@ -57,7 +57,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2
           extensions: imagick
-          coverage: xdebug
+          coverage: pcov
         env:
           update: true
 
