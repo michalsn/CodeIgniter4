@@ -81,18 +81,13 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with PHPUnit
-        run: script -e -c "vendor/bin/phpunit --prepend tests/_phpunit/xdebug-filter.php -v"
+        run: script -e -c "vendor/bin/phpunit -v"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
 
       - name: Run Codecov
+        if: ${{ success() }}
         uses: codecov/codecov-action@v1
         with:
           file: ./build/logs/clover.xml
-      #- name: Run Coveralls
-      #  if: ${{ success() }}
-      #  uses: coverallsapp/github-action@master
-      #  with:
-      #    github-token: ${{ secrets.GITHUB_TOKEN }}
-
