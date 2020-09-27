@@ -55,9 +55,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: composer
+          tools: composer:v2
           extensions: imagick
-          coverage: none
+          coverage: xdebug
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
