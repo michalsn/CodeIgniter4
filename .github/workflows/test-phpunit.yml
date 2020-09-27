@@ -13,8 +13,6 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
     strategy:
@@ -22,6 +20,8 @@ jobs:
       matrix:
         php-versions: ['7.4']
         db-platforms: ['sqlite']
+
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
 
     services:
       mysql:
