@@ -546,10 +546,11 @@ class Connection extends BaseConnection implements ConnectionInterface {
 
 		if ($stmt === false)
 		{
-			log_message('error', $this->error()['message']);
+			$error = $this->error();
+			log_message('error', $error['message']);
 			if ($this->DBDebug)
 			{
-				throw new DatabaseException($this->error());
+				throw new DatabaseException($error['message'], $error['code']);
 			}
 		}
 
