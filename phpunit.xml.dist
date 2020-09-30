@@ -18,7 +18,7 @@
 			<directory>./tests/system/Database</directory>
 		</testsuite>
 		<testsuite name="db">
-			<file>./tests/system/Database/DatabaseTestCaseTest.php</file>
+			<file>./tests/system/Database/Live/ConnectTest.php</file>
 		</testsuite>
 	</testsuites>
 
