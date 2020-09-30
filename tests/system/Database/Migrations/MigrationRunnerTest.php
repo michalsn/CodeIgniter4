@@ -77,7 +77,7 @@ class MigrationRunnerTest extends CIDatabaseTestCase
 		];
 
 		$this->hasInDatabase('migrations', $history);
-
+		d($runner->getHistory());
 		$this->assertEquals($history, (array) $runner->getHistory()[0]);
 	}
 

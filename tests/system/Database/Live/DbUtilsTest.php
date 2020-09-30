@@ -81,7 +81,7 @@ class DbUtilsTest extends CIDatabaseTestCase {
 		elseif ($this->db->DBDriver === 'Sqlsrv')
 		{
 			$databases = $util->listDatabases();
-
+			d($databases);
 			$this->assertTrue(in_array('test', $databases));
 		}
 	}

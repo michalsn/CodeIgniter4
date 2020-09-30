@@ -540,7 +540,22 @@ class Connection extends BaseConnection implements ConnectionInterface {
 	 */
 	public function execute(string $sql)
 	{
-		return ($this->scrollable === false || $this->isWriteType($sql)) ? sqlsrv_query($this->connID, $sql) : sqlsrv_query($this->connID, $sql, null, ['Scrollable' => $this->scrollable]);
+		try
+		{
+			return ($this->scrollable === false || $this->isWriteType($sql)) ?
+				sqlsrv_query($this->connID, $sql) :
+				sqlsrv_query($this->connID, $sql, null, ['Scrollable' => $this->scrollable]);
+		}
+		catch (\ErrorException $e)
+		{
+			log_message('error', $e);
+			if ($this->DBDebug)
+			{
+				throw $e;
+			}
+		}
+
+		return false;
 	}
 
 	//--------------------------------------------------------------------
