@@ -365,7 +365,7 @@ class Connection extends BaseConnection implements ConnectionInterface {
 
 	protected function _disableForeignKeyChecks()
 	{
-		return 'EXEC sp_MSforeachtable @command1="ALTER TABLE ? NOCHECK CONSTRAINT ALL""';
+		return 'EXEC sp_MSforeachtable @command1="ALTER TABLE ? NOCHECK CONSTRAINT ALL"';
 	}
 
 	protected function _enableForeignKeyChecks()
