@@ -142,7 +142,7 @@ class Forge extends \CodeIgniter\Database\Forge {
 		{
 			// check if fields are part of any indexes
 			$indexData = $this->db->getIndexData($table);
-			d($indexData, $alter_type, $field);
+
 			foreach ($indexData as $index)
 			{
 				if (is_string($field))
@@ -160,7 +160,7 @@ class Forge extends \CodeIgniter\Database\Forge {
 			}
 
 			$sql = 'ALTER TABLE [' . $table . '] DROP ';
-			d($sql, $field);
+
 			$fields = array_map(function ($item) {
 				return 'COLUMN [' . trim($item) . ']';
 			}, (array) $field);
