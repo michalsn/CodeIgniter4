@@ -550,6 +550,7 @@ class Connection extends BaseConnection implements ConnectionInterface {
 			log_message('error', $error['message']);
 			if ($this->DBDebug)
 			{
+				d($sql);
 				throw new DatabaseException($error['message']);
 			}
 		}
