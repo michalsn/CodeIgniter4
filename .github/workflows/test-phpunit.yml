@@ -39,7 +39,7 @@ jobs:
       mssql:
         image: microsoft/mssql-server-linux:2017-latest
         env:
-          SA_PASSWORD: 1Secure*Password1
+          SA_PASSWORD: mssql
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
         ports:
