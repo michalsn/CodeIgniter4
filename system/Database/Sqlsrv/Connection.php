@@ -509,7 +509,7 @@ class Connection extends BaseConnection implements ConnectionInterface {
 	 *
 	 * @return mixed
 	 */
-	public function setDatabase(string $databaseName)
+	public function setDatabase(string $databaseName = '')
 	{
 		if ($databaseName === '')
 		{
