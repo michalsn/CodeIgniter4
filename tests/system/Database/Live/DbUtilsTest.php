@@ -82,7 +82,7 @@ class DbUtilsTest extends CIDatabaseTestCase {
 		{
 			$databases = $util->listDatabases();
 			d($databases);
-			$this->assertTrue(in_array('tempdb', $databases));
+			$this->assertTrue(in_array('test', $databases));
 		}
 	}
 
@@ -113,7 +113,7 @@ class DbUtilsTest extends CIDatabaseTestCase {
 		}
 		elseif ($this->db->DBDriver === 'Sqlsrv')
 		{
-			$exist = $util->databaseExists('tempdb');
+			$exist = $util->databaseExists('test');
 
 			$this->assertTrue($exist);
 		}

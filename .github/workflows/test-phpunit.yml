@@ -56,7 +56,7 @@ jobs:
       fail-fast: true
       matrix:
         php-versions: ['7.4']
-        db-platforms: ['sqlsrv', 'mysql', 'postgres', 'sqlite']
+        db-platforms: ['sqlsrv', 'mysqli', 'postgres', 'sqlite']
 
     steps:
       - name: Create database for MSSQL Server
