@@ -85,7 +85,7 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 					'type_float'      => 10.1,
 					'type_real'       => 11.21,
 					'type_double'     => 23.22,
-					'type_decimal'    => 123123.2234,
+					//'type_decimal'    => 123123.2234,
 					'type_numeric'    => 123.23,
 					'type_blob'       => 'test blob',
 					'type_date'       => '2020-01-11T22:11:00.000+02:00',
