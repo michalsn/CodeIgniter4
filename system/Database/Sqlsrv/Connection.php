@@ -365,13 +365,13 @@ class Connection extends BaseConnection implements ConnectionInterface {
 
 	protected function _disableForeignKeyChecks()
 	{
-		$this->setDatabase();
+		//$this->setDatabase();
 		return 'EXEC sp_MSforeachtable @command1="ALTER TABLE ? NOCHECK CONSTRAINT ALL"';
 	}
 
 	protected function _enableForeignKeyChecks()
 	{
-		$this->setDatabase();
+		//$this->setDatabase();
 		return 'EXEC sp_MSforeachtable @command1="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT ALL"';
 	}
 
@@ -554,7 +554,7 @@ class Connection extends BaseConnection implements ConnectionInterface {
 			if ($this->DBDebug)
 			{
 				d($sql);
-				throw new DatabaseException($error['message']);
+				throw new \Exception($error['message']);
 			}
 		}
 
