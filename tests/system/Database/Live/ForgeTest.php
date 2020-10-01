@@ -193,7 +193,7 @@ class ForgeTest extends CIDatabaseTestCase {
 		$this->forge->createTable('forge_test_attributes', false, $attributes);
 
 		$exist = $this->db->tableExists('forge_test_attributes');
-		$this->forge->dropTable('forge_test_attributes', true, true);
+		$this->forge->dropTable('forge_test_attributes', true);
 
 		$this->assertTrue($exist);
 	}
