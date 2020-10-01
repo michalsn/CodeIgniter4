@@ -59,7 +59,7 @@ jobs:
         db-platforms: ['sqlsrv']
 
     steps:
-      - name: Create SQLSRV Database
+      - name: Create database for MSSQL Server
         if: ${{ matrix.db-platforms == 'sqlsrv'}}
         run: sqlcmd -S localhost -U sa -P 1Secure*Password1 -Q "CREATE DATABASE test"
 
