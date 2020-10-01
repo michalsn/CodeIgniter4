@@ -118,7 +118,9 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 
 		if ($this->db->DBDriver === 'Sqlsrv')
 		{
-			$data['type_test'][0]['type_time'] = '15:22:00';
+			$data['type_test'][0]['type_date']      = '2020-01-11';
+			$data['type_test'][0]['type_time']      = '15:22:00.000';
+			$data['type_test'][0]['type_datetime']  = '2020-06-18 05:12:24.000';
 			unset($data['type_test'][0]['type_enum']);
 			unset($data['type_test'][0]['type_set']);
 			unset($data['type_test'][0]['type_mediumtext']);
