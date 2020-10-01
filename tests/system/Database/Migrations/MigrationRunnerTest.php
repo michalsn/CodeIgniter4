@@ -76,6 +76,11 @@ class MigrationRunnerTest extends CIDatabaseTestCase
 			'batch'     => 1,
 		];
 
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->db->simpleQuery('SET IDENTITY_INSERT migrations ON');
+		}
+
 		$this->hasInDatabase('migrations', $history);
 		d($runner->getHistory());
 		$this->assertEquals($history, (array) $runner->getHistory()[0]);
