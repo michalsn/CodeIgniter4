@@ -544,16 +544,17 @@ class Connection extends BaseConnection implements ConnectionInterface {
 			sqlsrv_query($this->connID, $sql) :
 			sqlsrv_query($this->connID, $sql, null, ['Scrollable' => $this->scrollable]);
 
-		/*if ($stmt === false)
+		if ($stmt === false)
 		{
 			$error = $this->error();
+			d($error);
 			log_message('error', $error['message']);
 			if ($this->DBDebug)
 			{
 				d($sql);
 				throw new DatabaseException($error['message']);
 			}
-		}*/
+		}
 
 		return $stmt;
 	}
