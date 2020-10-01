@@ -59,6 +59,10 @@ jobs:
         db-platforms: ['sqlsrv']
 
     steps:
+      - name: Create SQLSRV Database
+        if: ${{ matrix.db-platforms == 'sqlsrv'}}
+        run: sqlcmd -Q "CREATE DATABASE test"
+
       - name: Checkout
         uses: actions/checkout@v2
 
