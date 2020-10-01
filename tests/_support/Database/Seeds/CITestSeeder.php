@@ -106,11 +106,14 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 		}
 		elseif ($this->db->DBDriver === 'Postgre' || $this->db->DBDriver === 'Sqlsrv')
 		{
-			$data['type_test'][0]['type_time'] = '15:22:00';
+			$data['type_test'][0]['type_time'] = $this->db->DBDriver === 'Sqlsrv' ? '15:22:00.000' : '15:22:00';
 			unset($data['type_test'][0]['type_enum']);
 			unset($data['type_test'][0]['type_set']);
 			unset($data['type_test'][0]['type_mediumtext']);
-			unset($data['type_test'][0]['type_real']);
+			if ($this->db->DBDriver === 'Postgre')
+			{
+				unset($data['type_test'][0]['type_real']);
+			}
 			unset($data['type_test'][0]['type_double']);
 			unset($data['type_test'][0]['type_decimal']);
 			unset($data['type_test'][0]['type_blob']);
