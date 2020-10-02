@@ -164,7 +164,6 @@ class GetTest extends CIDatabaseTestCase
 		}
 		if ($this->db->DBDriver === 'Sqlsrv')
 		{
-			d($type_test);
 			$this->assertEquals('int', $type_test[0]->type_name); //INTEGER AUTOINC
 			$this->assertEquals('varchar', $type_test[1]->type_name);  //VARCHAR
 			$this->assertEquals('char', $type_test[2]->type_name);  //CHAR
@@ -176,9 +175,9 @@ class GetTest extends CIDatabaseTestCase
 			$this->assertEquals(null, $type_test[8]->type_name);  //DATE
 			$this->assertEquals(null, $type_test[9]->type_name);  //TIME
 			$this->assertEquals(null, $type_test[10]->type_name);  //DATETIME
-			$this->assertEquals(null, $type_test[11]->type_name); //BIGINT
-			$this->assertEquals('bigint', $type_test[12]->type_name);  //REAL
-			$this->assertEquals('real', $type_test[13]->type_name);  //DECIMAL
+			$this->assertEquals('bigint', $type_test[11]->type_name); //BIGINT
+			$this->assertEquals('real', $type_test[12]->type_name);  //REAL
+			$this->assertEquals('decimal', $type_test[13]->type_name);  //DECIMAL
 		}
 	}
 

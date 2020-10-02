@@ -200,7 +200,7 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 
 		if ($this->db->DBDriver === 'Sqlsrv')
 		{
-			unset($data_type_fields['timestamp']);
+			unset($data_type_fields['type_timestamp']);
 		}
 
 		if ($this->db->DBDriver === 'Postgre' || $this->db->DBDriver === 'Sqlsrv')
