@@ -135,7 +135,7 @@ class Result extends BaseResult implements ResultInterface {
 			$retVal[$i]             = new stdClass();
 			$retVal[$i]->name       = $field['Name'];
 			$retVal[$i]->type       = $field['Type'];
-			$retVal[$i]->type_name  = isset($data_types[$field['Type']]) ? $data_types[$field['Type']] : null;
+			$retVal[$i]->type_name  = isset($data_types[$field['Type']]) ? $data_types[$field['Type']] : $field['Type'];
 			$retVal[$i]->max_length = $field['Size'];
 		}
 
