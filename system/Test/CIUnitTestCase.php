@@ -217,7 +217,9 @@ class CIUnitTestCase extends TestCase
 		if (! function_exists('xdebug_get_headers'))
 		{
 			//$this->markTestSkipped('XDebug not found.');
-			$headers = headers_list();
+			$headers = array_map(function ($header) {
+				return $header->getValueLine();
+			}, service('request')->getHeaders());
 		}
 		else
 		{
@@ -254,7 +256,9 @@ class CIUnitTestCase extends TestCase
 		if (! function_exists('xdebug_get_headers'))
 		{
 			//$this->markTestSkipped('XDebug not found.');
-			$headers = headers_list();
+			$headers = array_map(function ($header) {
+				return $header->getValueLine();
+			}, service('request')->getHeaders());
 		}
 		else
 		{
@@ -363,7 +367,9 @@ class CIUnitTestCase extends TestCase
 		if (! function_exists('xdebug_get_headers'))
 		{
 			//$this->markTestSkipped('XDebug not found.');
-			$headers = headers_list();
+			$headers = array_map(function ($header) {
+				return $header->getValueLine();
+			}, service('request')->getHeaders());
 		}
 		else
 		{

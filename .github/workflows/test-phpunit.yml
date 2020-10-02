@@ -72,7 +72,8 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
           extensions: imagick, sqlsrv
-          coverage: xdebug
+          ini-values: pcov.directory=system
+          coverage: pcov
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
@@ -94,14 +95,11 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --no-suggest --no-interaction --prefer-dist --optimize-autoloader
         env:
-          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
-
-      - name: Whitelist filtering for XDebug
-        run: php vendor/bin/phpunit --dump-xdebug-filter build/xdebug-filter.php
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}     
 
       - name: Test with PHPUnit
         #run: vendor/bin/phpunit -v --coverage-text --testsuite db
-        run: script -e -c "vendor/bin/phpunit --prepend build/xdebug-filter.php -v --coverage-text"
+        run: script -e -c "vendor/bin/phpunit -v --coverage-text"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
