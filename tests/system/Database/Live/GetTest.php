@@ -162,6 +162,22 @@ class GetTest extends CIDatabaseTestCase
 			$this->assertEquals('timestamp', $type_test[11]->type_name);  //TIMESTAMP
 			$this->assertEquals('int8', $type_test[12]->type_name); //BIGINT
 		}
+		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			$this->assertEquals('int4', $type_test[0]->type_name); //INTEGER AUTOINC
+			$this->assertEquals('varchar', $type_test[1]->type_name);  //VARCHAR
+			$this->assertEquals('bpchar', $type_test[2]->type_name);  //CHAR
+			$this->assertEquals('text', $type_test[3]->type_name);  //TEXT
+			$this->assertEquals('int2', $type_test[4]->type_name);  //SMALLINT
+			$this->assertEquals('int4', $type_test[5]->type_name);  //INTEGER
+			$this->assertEquals('float8', $type_test[6]->type_name);  //FLOAT
+			$this->assertEquals('numeric', $type_test[7]->type_name);  //NUMERIC
+			$this->assertEquals('date', $type_test[8]->type_name);  //DATE
+			$this->assertEquals('time', $type_test[9]->type_name);  //TIME
+			$this->assertEquals('timestamp', $type_test[10]->type_name);  //DATETIME
+			$this->assertEquals('timestamp', $type_test[11]->type_name);  //TIMESTAMP
+			$this->assertEquals('int8', $type_test[12]->type_name); //BIGINT
+		}
 	}
 
 	//--------------------------------------------------------------------

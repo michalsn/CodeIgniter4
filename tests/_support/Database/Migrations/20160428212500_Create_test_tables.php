@@ -137,7 +137,6 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'type' => 'TIME',
 				'null' => true,
 			],
-
 			'type_datetime'   => [
 				'type' => 'DATETIME',
 				'null' => true,
@@ -179,7 +178,11 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'type' => 'DOUBLE',
 				'null' => true,
 			],
-
+			'type_decimal'    => [
+				'type'       => 'DECIMAL',
+				'constraint' => '18,4',
+				'null'       => true,
+			],
 			'type_blob'       => [
 				'type' => 'BLOB',
 				'null' => true,
@@ -191,15 +194,16 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 		{
 			unset(
 				$data_type_fields['type_real'],
-				$data_type_fields['type_enum'],
-				$data_type_fields['type_set'],
-				$data_type_fields['type_mediumtext'],
-				$data_type_fields['type_double'],
-				$data_type_fields['type_blob'],
+				$data_type_fields['type_decimal'],
 			);
 		}
 
 		if ($this->db->DBDriver === 'Sqlsrv')
+		{
+			unset($data_type_fields['timestamp']);
+		}
+
+		if ($this->db->DBDriver === 'Postgre' || $this->db->DBDriver === 'Sqlsrv')
 		{
 			unset(
 				$data_type_fields['type_enum'],
@@ -207,10 +211,60 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				$data_type_fields['type_mediumtext'],
 				$data_type_fields['type_double'],
 				$data_type_fields['type_blob'],
-				$data_type_fields['type_timestamp'],
 			);
 		}
 
+		/*
+		if ($this->db->DBDriver !== 'Postgre')
+		{
+			$extra_fields = [
+
+				'type_real' => [
+					'type' => 'REAL',
+					'null' => true,
+				],
+
+			];
+			$data_type_fields = array_merge($data_type_fields, $extra_fields);
+		}
+
+		if ($this->db->DBDriver !== 'Postgre' && $this->db->DBDriver !== 'Sqlsrv')
+		{
+			$extra_fields = [
+				'type_enum'       => [
+					'type'       => 'ENUM',
+					'constraint' => [
+						'appel',
+						'pears',
+						'bananas',
+					],
+					'null'       => true,
+				],
+				'type_set'        => [
+					'type'       => 'SET',
+					'constraint' => [
+						'one',
+						'two',
+					],
+					'null'       => true,
+				],
+				'type_mediumtext' => [
+					'type' => 'MEDIUMTEXT',
+					'null' => true,
+				],
+				'type_double'     => [
+					'type' => 'DOUBLE',
+					'null' => true,
+				],
+
+				'type_blob'       => [
+					'type' => 'BLOB',
+					'null' => true,
+				],
+			];
+			$data_type_fields = array_merge($data_type_fields, $extra_fields);
+		}
+		*/
 		$this->forge->addField($data_type_fields);
 		$this->forge->addKey('id', true);
 		$this->forge->createTable('type_test', true);

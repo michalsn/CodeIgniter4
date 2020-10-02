@@ -88,7 +88,6 @@ class MigrationRunnerTest extends CIDatabaseTestCase
 			$this->db->simpleQuery('SET IDENTITY_INSERT ' . $this->db->prefixTable('migrations') . ' OFF');
 		}
 
-		d($runner->getHistory());
 		$this->assertEquals($history, (array) $runner->getHistory()[0]);
 	}
 

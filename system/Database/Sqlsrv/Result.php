@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2014-2019 British Columbia Institute of Technology
+ * Copyright (c) 2019-2020 CodeIgniter Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +30,10 @@
  *
  * @package    CodeIgniter
  * @author     CodeIgniter Dev Team
- * @copyright  2014-2019 British Columbia Institute of Technology (https://bcit.ca/)
+ * @copyright  2019-2020 CodeIgniter Foundation
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       https://codeigniter.com
- * @since      Version 3.0.0
+ * @since      Version 4.0.0
  * @filesource
  */
 
@@ -82,8 +83,6 @@ class Result extends BaseResult implements ResultInterface {
 		return $fieldNames;
 	}
 
-	//--------------------------------------------------------------------
-
 	/**
 	 * Generates an array of objects representing field meta-data.
 	 *
@@ -103,8 +102,6 @@ class Result extends BaseResult implements ResultInterface {
 		return $retVal;
 	}
 
-	//--------------------------------------------------------------------
-
 	/**
 	 * Frees the current result.
 	 *
@@ -118,8 +115,6 @@ class Result extends BaseResult implements ResultInterface {
 			$this->resultID = false;
 		}
 	}
-
-	//--------------------------------------------------------------------
 
 	/**
 	 * Moves the internal pointer to the desired offset. This is called
@@ -146,8 +141,6 @@ class Result extends BaseResult implements ResultInterface {
 		return true;
 	}
 
-	//--------------------------------------------------------------------
-
 	/**
 	 * Returns the result set as an array.
 	 *
@@ -160,8 +153,6 @@ class Result extends BaseResult implements ResultInterface {
 		//return sqlsrv_fetch_array($this->resultID, SQLSRV_FETCH_ASSOC, SQLSRV_SCROLL_RELATIVE, $this->rowOffset );
 		return sqlsrv_fetch_array($this->resultID, SQLSRV_FETCH_ASSOC);
 	}
-
-	//--------------------------------------------------------------------
 
 	/**
 	 * Returns the result set as an object.
@@ -177,7 +168,5 @@ class Result extends BaseResult implements ResultInterface {
 		//return sqlsrv_fetch_object($this->resultID, $className, null, SQLSRV_SCROLL_RELATIVE, $this->rowOffset );
 		return sqlsrv_fetch_object($this->resultID, $className);
 	}
-
-	//--------------------------------------------------------------------
 
 }

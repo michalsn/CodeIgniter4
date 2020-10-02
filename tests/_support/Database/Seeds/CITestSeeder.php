@@ -85,7 +85,7 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 					'type_float'      => 10.1,
 					'type_real'       => 11.21,
 					'type_double'     => 23.22,
-					//'type_decimal'    => 123123.2234,
+					'type_decimal'    => 123123.2234,
 					'type_numeric'    => 123.23,
 					'type_blob'       => 'test blob',
 					'type_date'       => '2020-01-11T22:11:00.000+02:00',
@@ -96,6 +96,7 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 				],
 			],
 		];
+
 		//set SQL times to more correct format
 		if ($this->db->DBDriver === 'SQLite3')
 		{
@@ -113,6 +114,7 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 			unset($data['type_test'][0]['type_mediumtext']);
 			unset($data['type_test'][0]['type_real']);
 			unset($data['type_test'][0]['type_double']);
+			unset($data['type_test'][0]['type_decimal']);
 			unset($data['type_test'][0]['type_blob']);
 		}
 
@@ -121,12 +123,12 @@ class CITestSeeder extends \CodeIgniter\Database\Seeder
 			$data['type_test'][0]['type_date']     = '2020-01-11';
 			$data['type_test'][0]['type_time']     = '15:22:00.000';
 			$data['type_test'][0]['type_datetime'] = '2020-06-18 05:12:24.000';
+			unset($data['type_test'][0]['type_timestamp']);
 			unset($data['type_test'][0]['type_enum']);
 			unset($data['type_test'][0]['type_set']);
 			unset($data['type_test'][0]['type_mediumtext']);
 			unset($data['type_test'][0]['type_double']);
 			unset($data['type_test'][0]['type_blob']);
-			unset($data['type_test'][0]['type_timestamp']);
 		}
 
 		foreach ($data as $table => $dummy_data)
