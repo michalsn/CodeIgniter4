@@ -172,7 +172,7 @@ class GetTest extends CIDatabaseTestCase
 			$this->assertEquals('int', $type_test[5]->type_name);  //INTEGER
 			$this->assertEquals('float', $type_test[6]->type_name);  //FLOAT
 			$this->assertEquals('numeric', $type_test[7]->type_name);  //NUMERIC
-			$this->assertEquals('date', $type_test[8]->type_name);  //DATE
+			$this->assertEquals(null, $type_test[8]->type_name);  //DATE
 			$this->assertEquals('time', $type_test[9]->type_name);  //TIME
 			$this->assertEquals('datetime', $type_test[10]->type_name);  //DATETIME
 			$this->assertEquals('bigint', $type_test[11]->type_name); //BIGINT
