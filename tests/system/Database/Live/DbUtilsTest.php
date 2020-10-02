@@ -128,7 +128,7 @@ class DbUtilsTest extends CIDatabaseTestCase {
 
 		$d = $util->optimizeTable('db_job');
 
-		if (in_array($this->db->DBDriver, ['MySQLi', 'Postgre', 'Sqlsrv']))
+		if (in_array($this->db->DBDriver, ['SQLite3', 'Postgre', 'Sqlsrv']))
 		{
 			$this->assertFalse((bool) $d);
 		}
