@@ -194,7 +194,7 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 		{
 			unset(
 				$data_type_fields['type_real'],
-				$data_type_fields['type_decimal'],
+				$data_type_fields['type_decimal']
 			);
 		}
 
@@ -210,7 +210,7 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				$data_type_fields['type_set'],
 				$data_type_fields['type_mediumtext'],
 				$data_type_fields['type_double'],
-				$data_type_fields['type_blob'],
+				$data_type_fields['type_blob']
 			);
 		}
 
