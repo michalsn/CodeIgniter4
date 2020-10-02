@@ -72,7 +72,8 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
           extensions: imagick, sqlsrv
-          coverage: none
+          ini-values: pcov.directory=system
+          coverage: pcov
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
