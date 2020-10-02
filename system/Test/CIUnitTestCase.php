@@ -216,10 +216,15 @@ class CIUnitTestCase extends TestCase
 
 		if (! function_exists('xdebug_get_headers'))
 		{
-			$this->markTestSkipped('XDebug not found.');
+			//$this->markTestSkipped('XDebug not found.');
+			$headers = headers_list();
+		}
+		else
+		{
+			$headers = xdebug_get_headers();
 		}
 
-		foreach (xdebug_get_headers() as $emitted)
+		foreach ($headers as $emitted)
 		{
 			$found = $ignoreCase ?
 					(stripos($emitted, $header) === 0) :
@@ -248,10 +253,15 @@ class CIUnitTestCase extends TestCase
 
 		if (! function_exists('xdebug_get_headers'))
 		{
-			$this->markTestSkipped('XDebug not found.');
+			//$this->markTestSkipped('XDebug not found.');
+			$headers = headers_list();
+		}
+		else
+		{
+			$headers = xdebug_get_headers();
 		}
 
-		foreach (xdebug_get_headers() as $emitted)
+		foreach ($headers as $emitted)
 		{
 			$found = $ignoreCase ?
 					(stripos($emitted, $header) === 0) :
@@ -352,10 +362,15 @@ class CIUnitTestCase extends TestCase
 
 		if (! function_exists('xdebug_get_headers'))
 		{
-			$this->markTestSkipped('XDebug not found.');
+			//$this->markTestSkipped('XDebug not found.');
+			$headers = headers_list();
+		}
+		else
+		{
+			$headers = xdebug_get_headers();
 		}
 
-		foreach (xdebug_get_headers() as $emitted)
+		foreach ($headers as $emitted)
 		{
 			$found = $ignoreCase ?
 					(stripos($emitted, $header) === 0) :
