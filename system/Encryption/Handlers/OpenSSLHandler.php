@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -38,7 +39,6 @@
 
 namespace CodeIgniter\Encryption\Handlers;
 
-use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Encryption\Exceptions\EncryptionException;
 
 /**
@@ -46,14 +46,17 @@ use CodeIgniter\Encryption\Exceptions\EncryptionException;
  */
 class OpenSSLHandler extends BaseHandler
 {
-
 	/**
 	 * HMAC digest to use
+	 *
+	 * @var string
 	 */
 	protected $digest = 'SHA512';
 
 	/**
 	 * Cipher to use
+	 *
+	 * @var string
 	 */
 	protected $cipher = 'AES-256-CTR';
 
@@ -64,28 +67,8 @@ class OpenSSLHandler extends BaseHandler
 	 */
 	protected $key = '';
 
-	// --------------------------------------------------------------------
-
 	/**
-	 * Initialize OpenSSL, remembering parameters
-	 *
-	 * @param \CodeIgniter\Config\BaseConfig|null $config
-	 *
-	 * @throws \CodeIgniter\Encryption\Exceptions\EncryptionException
-	 */
-	public function __construct(BaseConfig $config = null)
-	{
-		parent::__construct($config);
-	}
-
-	/**
-	 * Encrypt plaintext, with optional HMAC and base64 encoding
-	 *
-	 * @param string       $data   Input data
-	 * @param array|string $params Over-ridden parameters, specifically the key
-	 *
-	 * @return string
-	 * @throws \CodeIgniter\Encryption\Exceptions\EncryptionException
+	 * {@inheritDoc}
 	 */
 	public function encrypt($data, $params = null)
 	{
@@ -111,7 +94,7 @@ class OpenSSLHandler extends BaseHandler
 		$secret = \hash_hkdf($this->digest, $this->key);
 
 		// basic encryption
-		$iv = ($iv_size = \openssl_cipher_iv_length($this->cipher)) ? \openssl_random_pseudo_bytes($iv_size) : null;
+		$iv = ($ivSize = \openssl_cipher_iv_length($this->cipher)) ? \openssl_random_pseudo_bytes($ivSize) : null;
 
 		$data = \openssl_encrypt($data, $this->cipher, $secret, OPENSSL_RAW_DATA, $iv);
 
@@ -127,16 +110,8 @@ class OpenSSLHandler extends BaseHandler
 		return $hmacKey . $result;
 	}
 
-	// --------------------------------------------------------------------
-
 	/**
-	 * Decrypt ciphertext, with optional HMAC and base64 encoding
-	 *
-	 * @param string       $data   Encrypted data
-	 * @param array|string $params Over-ridden parameters, specifically the key
-	 *
-	 * @return string
-	 * @throws \CodeIgniter\Encryption\Exceptions\EncryptionException
+	 * {@inheritDoc}
 	 */
 	public function decrypt($data, $params = null)
 	{
@@ -165,15 +140,16 @@ class OpenSSLHandler extends BaseHandler
 		$hmacKey    = self::substr($data, 0, $hmacLength);
 		$data       = self::substr($data, $hmacLength);
 		$hmacCalc   = \hash_hmac($this->digest, $data, $secret, true);
+
 		if (! hash_equals($hmacKey, $hmacCalc))
 		{
 			throw EncryptionException::forAuthenticationFailed();
 		}
 
-		if ($iv_size = \openssl_cipher_iv_length($this->cipher))
+		if ($ivSize = \openssl_cipher_iv_length($this->cipher))
 		{
-			$iv   = self::substr($data, 0, $iv_size);
-			$data = self::substr($data, $iv_size);
+			$iv   = self::substr($data, 0, $ivSize);
+			$data = self::substr($data, $ivSize);
 		}
 		else
 		{
@@ -182,5 +158,4 @@ class OpenSSLHandler extends BaseHandler
 
 		return \openssl_decrypt($data, $this->cipher, $secret, OPENSSL_RAW_DATA, $iv);
 	}
-
 }

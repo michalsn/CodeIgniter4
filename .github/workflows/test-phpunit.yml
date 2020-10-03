@@ -99,7 +99,7 @@ jobs:
 
       - name: Test with PHPUnit
         #run: vendor/bin/phpunit -v --coverage-text --testsuite db
-        run: script -e -c "vendor/bin/phpunit -v --stderr --coverage-text"
+        run: script -e -c "vendor/bin/phpunit -v --coverage-text"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color

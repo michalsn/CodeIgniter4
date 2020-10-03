@@ -406,7 +406,7 @@ class Parser extends View
 
 						continue;
 					}
-					else if (is_object($val))
+					if (is_object($val))
 					{
 						$val = 'Class: ' . get_class($val);
 					}
@@ -428,9 +428,9 @@ class Parser extends View
 			}
 
 			//Escape | character from filters as it's handled as OR in regex
-			$escaped_match = preg_replace('/(?<!\\\\)\\|/', '\\|', $match[0]);
+			$escapedMatch = preg_replace('/(?<!\\\\)\\|/', '\\|', $match[0]);
 
-			$replace['#' . $escaped_match . '#s'] = $str;
+			$replace['#' . $escapedMatch . '#s'] = $str;
 		}
 
 		return $replace;

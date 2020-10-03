@@ -171,9 +171,9 @@ class GDHandler extends BaseHandler
 	{
 		if (function_exists('gd_info'))
 		{
-			$gd_version = @gd_info();
+			$gdVersion = @gd_info();
 
-			return preg_replace('/\D/', '', $gd_version['GD Version']);
+			return preg_replace('/\D/', '', $gdVersion['GD Version']);
 		}
 
 		return false;
@@ -246,7 +246,8 @@ class GDHandler extends BaseHandler
 
 		$dest = $create($this->width, $this->height);
 
-		if ($this->image()->imageType === IMAGETYPE_PNG) // png we can actually preserve transparency
+		// for png and webp we can actually preserve transparency
+		if (in_array($this->image()->imageType, $this->supportTransparency, true))
 		{
 			imagealphablending($dest, false);
 			imagesavealpha($dest, true);
