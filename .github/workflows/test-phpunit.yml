@@ -71,7 +71,6 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
           extensions: imagick, sqlsrv
-          ini-values: xdebug.remote_enable=0, xdebug.profiler_enable=0
           coverage: xdebug
 
       - name: Install Memcached
