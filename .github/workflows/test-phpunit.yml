@@ -55,8 +55,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
-        db-platforms: ['mysqli', 'postgres', 'sqlite', 'sqlsrv']
+        php-versions: ['7.4']
+        db-platforms: ['sqlsrv']
 
     steps:
       - name: Create database for MSSQL Server
@@ -72,8 +72,8 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
           extensions: imagick, sqlsrv
-          ini-values: pcov.directory=system
-          coverage: pcov
+          ini-values: xdebug.remote_enable=0, xdebug.profiler_enable=0
+          coverage: xdebug
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
