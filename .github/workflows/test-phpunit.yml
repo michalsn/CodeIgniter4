@@ -44,7 +44,6 @@ jobs:
           MSSQL_PID: Developer
         ports:
           - 1433:1433
-        #options: --name mssql -h mssql
 
       redis:
         image: redis
