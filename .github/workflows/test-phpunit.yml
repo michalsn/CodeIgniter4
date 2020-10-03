@@ -90,9 +90,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          composer install --no-progress --no-suggest --no-interaction --prefer-dist --optimize-autoloader
           composer remove --dev phpstan/phpstan
           composer remove --dev rector/rector
-          composer install --no-progress --no-suggest --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
