@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    if: "!contains(toJSON(github.event.commits.*.message), '[ci skip]')"
 
     services:
       mysql:
