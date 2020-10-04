@@ -56,20 +56,19 @@ jobs:
       matrix:
         php-versions: ['7.2', '7.3']
         db-platforms: ['mysqli', 'postgres', 'sqlite', 'sqlsrv']
-        coverages: ['none']
         include:
           - php-versions: '7.4'
             db-platforms: 'mysqli'
-            coverages: 'xdebug'
+            ini-values: 'xdebug.coverage_enable=0'
           - php-versions: '7.4'
             db-platforms: 'postgres'
-            coverages: 'xdebug'
+            ini-values: 'xdebug.coverage_enable=0'
           - php-versions: '7.4'
             db-platforms: 'sqlite'
-            coverages: 'xdebug'
+            ini-values: 'xdebug.coverage_enable=0'
           - php-versions: '7.4'
             db-platforms: 'sqlsrv'
-            coverages: 'xdebug'
+            ini-values: 'xdebug.coverage_enable=0'
 
     steps:
       - name: Create database for MSSQL Server
@@ -85,7 +84,8 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
           extensions: imagick, sqlsrv
-          coverage: ${{ matrix.coverages }}
+          ini-values: ${{ matrix.ini-values }}
+          coverage: xdebug
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
