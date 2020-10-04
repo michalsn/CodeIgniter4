@@ -56,7 +56,7 @@ jobs:
       matrix:
         php-versions: ['7.2', '7.3']
         db-platforms: ['mysqli', 'postgres', 'sqlite', 'sqlsrv']
-        ini-values: 'xdebug.coverage_enable=0'
+        ini-values: ['xdebug.coverage_enable=0']
         include:
           - php-versions: '7.4'
             db-platforms: 'mysqli'
