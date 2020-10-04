@@ -54,21 +54,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.2', '7.3']
-        db-platforms: ['mysqli', 'postgres', 'sqlite', 'sqlsrv']
+        php-versions: ['7.2', '7.3', '7.4']
+        db-platforms: ['mysqli', 'postgres', 'sqlsrv']
         ini-values: ['xdebug.coverage_enable=0']
         include:
-          - php-versions: '7.4'
-            db-platforms: 'mysqli'
+          - php-versions: '7.2'
+            db-platforms: 'sqlite'
             ini-values: 'xdebug.coverage_enable=1'
-          - php-versions: '7.4'
-            db-platforms: 'postgres'
-            ini-values: 'xdebug.coverage_enable=1'
-          - php-versions: '7.4'
+          - php-versions: '7.3'
             db-platforms: 'sqlite'
             ini-values: 'xdebug.coverage_enable=1'
           - php-versions: '7.4'
-            db-platforms: 'sqlsrv'
+            db-platforms: 'sqlite'
             ini-values: 'xdebug.coverage_enable=1'
 
     steps:
