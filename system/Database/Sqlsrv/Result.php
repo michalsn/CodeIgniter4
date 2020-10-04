@@ -167,15 +167,9 @@ class Result extends BaseResult implements ResultInterface {
 	 */
 	public function dataSeek(int $n = 0)
 	{
-		if ($n > 0)
+		if ($n)
 		{
-			for ($i = 0; $i < $n; $i++)
-			{
-				if (sqlsrv_fetch( $this->resultID ) === false)
-				{
-					die( print_r( sqlsrv_errors(), true));
-				}
-			}
+			return sqlsrv_fetch($this->resultID, $n);
 		}
 
 		return true;
