@@ -56,19 +56,20 @@ jobs:
       matrix:
         php-versions: ['7.2', '7.3']
         db-platforms: ['mysqli', 'postgres', 'sqlite', 'sqlsrv']
+        ini-values: 'xdebug.coverage_enable=0'
         include:
           - php-versions: '7.4'
             db-platforms: 'mysqli'
-            ini-values: 'xdebug.coverage_enable=0'
+            ini-values: 'xdebug.coverage_enable=1'
           - php-versions: '7.4'
             db-platforms: 'postgres'
-            ini-values: 'xdebug.coverage_enable=0'
+            ini-values: 'xdebug.coverage_enable=1'
           - php-versions: '7.4'
             db-platforms: 'sqlite'
-            ini-values: 'xdebug.coverage_enable=0'
+            ini-values: 'xdebug.coverage_enable=1'
           - php-versions: '7.4'
             db-platforms: 'sqlsrv'
-            ini-values: 'xdebug.coverage_enable=0'
+            ini-values: 'xdebug.coverage_enable=1'
 
     steps:
       - name: Create database for MSSQL Server
