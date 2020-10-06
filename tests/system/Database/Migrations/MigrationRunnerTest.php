@@ -90,8 +90,8 @@ class MigrationRunnerTest extends CIDatabaseTestCase
 
 		$this->assertEquals($history, (array) $runner->getHistory()[0]);
 
-		$db = $this->getPrivateProperty($runner, 'db');
-		$db->table('migrations')->delete(['id' => 4]);
+		//$db = $this->getPrivateProperty($runner, 'db');
+		//$db->table('migrations')->delete(['id' => 4]);
 	}
 
 	public function testGetHistoryReturnsEmptyArrayWithNoResults()
