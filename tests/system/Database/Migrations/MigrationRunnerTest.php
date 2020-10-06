@@ -58,7 +58,7 @@ class MigrationRunnerTest extends CIDatabaseTestCase
 
 		$this->assertEquals($messages, $runner->getCliMessages());
 	}
-
+	/*
 	public function testGetHistory()
 	{
 		$runner = new MigrationRunner($this->config);
@@ -93,7 +93,7 @@ class MigrationRunnerTest extends CIDatabaseTestCase
 		$db = $this->getPrivateProperty($runner, 'db');
 		$db->table('migrations')->delete(4);
 	}
-
+	*/
 	public function testGetHistoryReturnsEmptyArrayWithNoResults()
 	{
 		$runner = new MigrationRunner($this->config);
