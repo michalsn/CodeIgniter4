@@ -53,7 +53,7 @@ class CountTest extends CIDatabaseTestCase
 	{
 		$builder = $this->db->table('job');
 
-		$this->assertSame('1', $builder->where('name', 'Developer')->cgetCompiledSelect());
+		$this->assertSame('1', $builder->where('name', 'Developer')->getCompiledSelect());
 	}
 	public function testCountAllResultsWithLimit2()
 	{
