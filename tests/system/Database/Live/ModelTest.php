@@ -1561,7 +1561,7 @@ class ModelTest extends CIDatabaseTestCase
 			'value' => 'baz',
 		]);
 
-		$model->where('key', 'foo')
+		$model->where('key', 'fo1o')
 			  ->update(null, ['key' => 'bar', 'value' => 'baz']);
 
 		$this->seeInDatabase('secondary', [

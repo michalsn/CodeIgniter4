@@ -620,7 +620,7 @@ class Builder extends BaseBuilder
 
 				if (empty($op))
 				{
-					$k .= ' =';
+					$k .= ' LIKE';
 				}
 				else
 				{
