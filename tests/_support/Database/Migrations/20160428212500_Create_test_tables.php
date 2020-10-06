@@ -85,7 +85,11 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'type'       => 'VARCHAR',
 				'constraint' => 40,
 			],
-			'value' => ['type' => 'TEXT'],
+			'value' => [
+				'type'       => 'VARCHAR',
+				'constraint' => 400,
+				'null'       => true,
+			],
 		]);
 		$this->forge->addKey('id', true);
 		$this->forge->createTable('misc', true);
