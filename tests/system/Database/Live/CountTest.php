@@ -48,25 +48,4 @@ class CountTest extends CIDatabaseTestCase
 	}
 
 	//--------------------------------------------------------------------
-
-	public function testCountAllResultsWithLimit1()
-	{
-		$builder = $this->db->table('job');
-
-		$this->assertSame('1', $builder->where('name', 'table.Developer')->getCompiledSelect());
-	}
-	public function testCountAllResultsWithLimit2()
-	{
-		$builder = $this->db->table('job');
-
-		$this->assertSame('2', $builder->where('name = table.Developer', null, false)->getCompiledSelect());
-	}
-	public function testCountAllResultsWithLimit3()
-	{
-		$builder = $this->db->table('job');
-
-		$this->assertSame('3', $builder->where('name', 'table.Developer', false)->getCompiledSelect());
-	}
-
-	//--------------------------------------------------------------------
 }
