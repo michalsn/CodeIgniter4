@@ -19,7 +19,7 @@ class IncrementTest extends CIDatabaseTestCase
 				->where('name', 'incremental')
 				->increment('description');
 
-		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => 7]);
+		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => '7']);
 	}
 
 	//--------------------------------------------------------------------
@@ -32,7 +32,7 @@ class IncrementTest extends CIDatabaseTestCase
 				 ->where('name', 'incremental')
 				 ->increment('description', 2);
 
-		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => 8]);
+		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => '8']);
 	}
 
 	//--------------------------------------------------------------------
@@ -45,7 +45,7 @@ class IncrementTest extends CIDatabaseTestCase
 				 ->where('name', 'incremental')
 				 ->decrement('description');
 
-		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => 5]);
+		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => '5']);
 	}
 
 	//--------------------------------------------------------------------
@@ -58,7 +58,7 @@ class IncrementTest extends CIDatabaseTestCase
 				 ->where('name', 'incremental')
 				 ->decrement('description', 2);
 
-		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => 4]);
+		$this->seeInDatabase('job', ['name' => 'incremental', 'description' => '4']);
 	}
 
 	//--------------------------------------------------------------------

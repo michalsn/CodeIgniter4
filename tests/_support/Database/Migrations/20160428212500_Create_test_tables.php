@@ -51,8 +51,9 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'constraint' => 40,
 			],
 			'description' => [
-				'type' => 'TEXT',
-				'null' => true,
+				'type'       => 'VARCHAR',
+				'constraint' => 400,
+				'null'       => true,
 			],
 			'created_at'  => [
 				'type'       => 'INTEGER',
