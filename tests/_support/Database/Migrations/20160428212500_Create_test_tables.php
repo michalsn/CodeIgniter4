@@ -257,7 +257,11 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'type'       => 'VARCHAR',
 				'constraint' => 40,
 			],
-			'value' => ['type' => 'TEXT'],
+			'value' => [
+				'type'       => 'VARCHAR',
+				'constraint' => 400,
+				'null'       => true,
+			],
 		]);
 		$this->forge->addKey('id', true);
 		$this->forge->createTable('secondary', true);
@@ -268,7 +272,11 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'type'       => 'VARCHAR',
 				'constraint' => 3,
 			],
-			'value' => ['type' => 'TEXT'],
+			'value' => [
+				'type'       => 'VARCHAR',
+				'constraint' => 400,
+				'null'       => true,
+			],
 		]);
 		$this->forge->addKey('id', true);
 		$this->forge->createTable('stringifypkey', true);
@@ -280,7 +288,11 @@ class Migration_Create_test_tables extends \CodeIgniter\Database\Migration
 				'constraint' => 40,
 				'unique'     => true,
 			],
-			'value' => ['type' => 'TEXT'],
+			'value' => [
+				'type'       => 'VARCHAR',
+				'constraint' => 400,
+				'null'       => true,
+			],
 		]);
 		$this->forge->addKey('key', true);
 		$this->forge->createTable('without_auto_increment', true);
