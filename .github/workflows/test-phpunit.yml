@@ -1,6 +1,9 @@
 name: PHPUnit
 
 on:
+  push:
+    branches:
+      - action-test-sqlsrv2
   pull_request:
     branches:
       - develop
