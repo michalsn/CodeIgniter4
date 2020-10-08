@@ -12,9 +12,16 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
 
-    if: "!contains(toJSON(github.event.commits.*.message), '[ci skip]')"
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4']
+        db-platforms: ['MySQLi', 'Postgre', 'SQLite3', 'Sqlsrv']
 
     services:
       mysql:
@@ -25,7 +32,6 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
       postgres:
         image: postgres
         env:
@@ -35,7 +41,6 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
-
       mssql:
         image: microsoft/mssql-server-linux:2017-latest
         env:
@@ -44,22 +49,15 @@ jobs:
           MSSQL_PID: Developer
         ports:
           - 1433:1433
-
       redis:
         image: redis
         ports:
           - 6379:6379
         options: --health-cmd "redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php-versions: ['7.4']
-        db-platforms: ['sqlsrv', 'mysqli', 'postgres', 'sqlite']
-
     steps:
       - name: Create database for MSSQL Server
-        if: ${{ matrix.db-platforms == 'sqlsrv'}}
+        if: ${{ matrix.db-platforms == 'Sqlsrv'}}
         run: sqlcmd -S localhost -U sa -P 1Secure*Password1 -Q "CREATE DATABASE test"
 
       - name: Checkout
@@ -69,9 +67,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: composer, pecl
+          tools: composer:v2, pecl
           extensions: imagick, sqlsrv
-          coverage: pcov
+          coverage: xdebug
+        env:
+          update: true
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
@@ -94,20 +94,32 @@ jobs:
           composer remove --dev rector/rector
           composer remove --dev codeigniter4/codeigniter4-standard
           composer remove --dev squizlabs/php_codesniffer
+          composer update
           php -r 'file_put_contents("vendor/laminas/laminas-zendframework-bridge/src/autoload.php", "");'
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
-      #- name: Whitelist filtering for XDebug
-      #  run: php vendor/bin/phpunit --dump-xdebug-filter build/xdebug-filter.php
-
       - name: Test with PHPUnit
-        #run: vendor/bin/phpunit -v --coverage-text --testsuite db
-        run: script -e -c "vendor/bin/phpunit -v --coverage-text"
+        run: script -e -c "vendor/bin/phpunit -v"
         env:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
 
-      #- if: success()
-      #  run: php tests/bin/php-coveralls.phar -v
+      - name: Run Coveralls
+        run: |
+          composer global require twinh/php-coveralls
+          php-coveralls --coverage_clover=build/logs/clover.xml -v
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: PHP ${{ matrix.php-versions }}
 
+  coveralls-finish:
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
