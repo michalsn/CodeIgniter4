@@ -87,7 +87,7 @@ class Seeder
 	 *
 	 * @var \Faker\Generator|null
 	 */
-	protected $faker;
+	//protected $faker;
 
 	/**
 	 * If true, will not display CLI messages.
@@ -124,7 +124,7 @@ class Seeder
 
 		$this->db    = &$db;
 		$this->forge = Database::forge($this->DBGroup);
-		$this->faker = class_exists('\Faker\Factory') ? \Faker\Factory::create() : null;
+		//$this->faker = class_exists('\Faker\Factory') ? \Faker\Factory::create() : null;
 	}
 
 	/**
