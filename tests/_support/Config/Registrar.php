@@ -77,7 +77,7 @@ class Registrar
 			'username' => 'system',
 			'password' => 'oracle',
 			'database' => 'test',
-			'DBDriver' => 'Postgre',
+			'DBDriver' => 'OCI8',
 			'DBPrefix' => 'db_',
 			'pConnect' => false,
 			'DBDebug'  => (ENVIRONMENT !== 'production'),
