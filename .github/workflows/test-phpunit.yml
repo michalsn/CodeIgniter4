@@ -68,10 +68,6 @@ jobs:
         options: --health-cmd "redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Create database for Oracle
-        if: ${{ matrix.db-platforms == 'OCI8'}}
-        run: sqlplus system/oracle@//localhost:1521/xe
-
       - name: Checkout
         uses: actions/checkout@v2
 
