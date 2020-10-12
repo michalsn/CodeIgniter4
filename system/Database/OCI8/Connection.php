@@ -763,7 +763,7 @@ SQL;
 			$this->DSN = $this->hostname
 				. $easyConnectablePort
 				. $easyConnectableDatabase;
-
+			d($sql); // @phpstan-ignore-line
 			if (preg_match($this->validDSNs['ec'], $this->DSN))
 			{
 				return;
