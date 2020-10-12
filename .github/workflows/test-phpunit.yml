@@ -63,7 +63,7 @@ jobs:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
       oracle:
-        image: sath89/oracle-12c
+        image: konnecteam/docker-oracle-12c
         ports:
           - 1521:1521
       redis:

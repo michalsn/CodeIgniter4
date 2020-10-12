@@ -72,11 +72,11 @@ class Registrar
 			'port'     => 3306,
 		],
 		'OCI8'    => [
-			'DSN'      => 'localhost:1521/xe',
+			'DSN'      => '',
 			'hostname' => 'localhost',
 			'username' => 'system',
 			'password' => 'oracle',
-			'database' => 'xe',
+			'database' => 'XE',
 			'DBDriver' => 'OCI8',
 			'DBPrefix' => 'db_',
 			'pConnect' => false,
