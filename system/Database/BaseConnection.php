@@ -365,7 +365,8 @@ abstract class BaseConnection implements ConnectionInterface
 		}
 		catch (Throwable $e)
 		{
-			log_message('error', 'Error connecting to the database: ' . $e->getMessage());
+			//log_message('error', 'Error connecting to the database: ' . $e->getMessage());
+			throw new DatabaseException('Unable to connect to the database: ' . $e->getMessage());
 		}
 
 		// No connection resource? Check if there is a failover else throw an error
@@ -407,7 +408,7 @@ abstract class BaseConnection implements ConnectionInterface
 			// We still don't have a connection?
 			if (! $this->connID)
 			{
-				throw new DatabaseException('Unable to connect to the database: ' . oci_error()['code'] . ' ' . oci_error()['message']);
+				throw new DatabaseException('Unable to connect to the database.');
 			}
 		}
 
