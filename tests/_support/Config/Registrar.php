@@ -72,7 +72,7 @@ class Registrar
 			'port'     => 3306,
 		],
 		'OCI8'    => [
-			'DSN'      => '',
+			'DSN'      => 'system/oracle@//localhost:1521/xe',
 			'hostname' => 'localhost',
 			'username' => 'system',
 			'password' => 'oracle',
