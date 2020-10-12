@@ -158,7 +158,7 @@ class Connection extends BaseConnection implements ConnectionInterface
 		{
 			$this->buildDSN();
 		}
-
+		d($this->DSN); // @phpstan-ignore-line
 		$func = ($persistent === true) ? 'oci_pconnect' : 'oci_connect';
 
 		return empty($this->charset)

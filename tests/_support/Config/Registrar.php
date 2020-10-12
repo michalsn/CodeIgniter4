@@ -76,7 +76,7 @@ class Registrar
 			'hostname' => 'localhost',
 			'username' => 'system',
 			'password' => 'oracle',
-			'database' => 'test',
+			'database' => 'xe',
 			'DBDriver' => 'OCI8',
 			'DBPrefix' => 'db_',
 			'pConnect' => false,
