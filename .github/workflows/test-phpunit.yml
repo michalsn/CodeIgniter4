@@ -3,6 +3,7 @@ name: PHPUnit
 on:
   push:
     branches:
+      - action-test-oracle
       - develop
       - '4.*'
     paths:
@@ -40,8 +41,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
-        db-platforms: ['MySQLi', 'Postgre', 'SQLite3']
+        php-versions: ['7.4']
+        db-platforms: ['OCI8']
 
     services:
       mysql:
@@ -61,6 +62,10 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
+      oracle:
+        image: oracleinanutshell/oracle-xe-11g:latest
+        ports:
+          - 1521:1521
       redis:
         image: redis
         ports:
@@ -76,8 +81,8 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2
-          extensions: imagick
-          coverage: xdebug
+          extensions: imagick, oci8
+          coverage: pcov
         env:
           update: true
 
@@ -98,7 +103,10 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-progress --no-suggest --no-interaction --prefer-dist --optimize-autoloader
-          composer remove --dev rector/rector phpstan/phpstan codeigniter4/codeigniter4-standard squizlabs/php_codesniffer
+          composer remove --dev phpstan/phpstan
+          composer remove --dev rector/rector
+          composer remove --dev codeigniter4/codeigniter4-standard
+          composer remove --dev squizlabs/php_codesniffer
           composer update
           php -r 'file_put_contents("vendor/laminas/laminas-zendframework-bridge/src/autoload.php", "");'
         env:
@@ -110,15 +118,14 @@ jobs:
           DB: ${{ matrix.db-platforms }}
           TERM: xterm-256color
 
-      - if: matrix.php-versions == '7.4'
-        name: Run Coveralls
+      - name: Run Coveralls
         run: |
           composer global require php-coveralls/php-coveralls:^2.4
           php-coveralls --coverage_clover=build/logs/clover.xml -v
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_PARALLEL: true
-          COVERALLS_FLAG_NAME: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
+          COVERALLS_FLAG_NAME: PHP ${{ matrix.php-versions }}
 
   coveralls-finish:
     needs: [tests]
@@ -127,5 +134,5 @@ jobs:
       - name: Coveralls Finished
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github_token }}
           parallel-finished: true
