@@ -71,6 +71,25 @@ class Registrar
 			'failover' => [],
 			'port'     => 3306,
 		],
+		'OCI8'    => [
+			'DSN'      => '',
+			'hostname' => 'localhost',
+			'username' => 'system',
+			'password' => 'oracle',
+			'database' => 'test',
+			'DBDriver' => 'Postgre',
+			'DBPrefix' => 'db_',
+			'pConnect' => false,
+			'DBDebug'  => (ENVIRONMENT !== 'production'),
+			'charset'  => 'utf8',
+			'DBCollat' => 'utf8_general_ci',
+			'swapPre'  => '',
+			'encrypt'  => false,
+			'compress' => false,
+			'strictOn' => false,
+			'failover' => [],
+			'port'     => 1521,
+		],
 	];
 
 	/**
