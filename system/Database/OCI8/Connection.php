@@ -158,7 +158,7 @@ class Connection extends BaseConnection implements ConnectionInterface
 		{
 			$this->buildDSN();
 		}
-		d($this->DSN); // @phpstan-ignore-line
+
 		$func = ($persistent === true) ? 'oci_pconnect' : 'oci_connect';
 
 		return empty($this->charset)
@@ -258,7 +258,7 @@ class Connection extends BaseConnection implements ConnectionInterface
 			}
 			$this->stmtId = oci_parse($this->connID, $sql);
 		}
-
+		d($sql); // @phpstan-ignore-line
 		if (strpos($sql, 'RETURNING ROWID INTO :CI_OCI8_ROWID') !== false)
 		{
 			oci_bind_by_name($this->stmtId, ':CI_OCI8_ROWID', $this->rowId, 255);
