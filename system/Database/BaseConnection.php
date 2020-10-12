@@ -407,7 +407,7 @@ abstract class BaseConnection implements ConnectionInterface
 			// We still don't have a connection?
 			if (! $this->connID)
 			{
-				throw new DatabaseException('Unable to connect to the database.');
+				throw new DatabaseException('Unable to connect to the database: ' . oci_error()['code'] . ' ' . oci_error()['message']);
 			}
 		}
 
