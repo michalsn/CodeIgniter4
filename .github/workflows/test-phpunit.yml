@@ -81,7 +81,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2
-          extensions: imagick, oci8
+          extensions: imagick, oci8-11
           coverage: pcov
         env:
           update: true
