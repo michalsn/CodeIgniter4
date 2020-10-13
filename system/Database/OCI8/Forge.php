@@ -57,7 +57,8 @@ class Forge extends \CodeIgniter\Database\Forge
 	 *
 	 * @var string|false
 	 */
-	protected $createTableIfStr = "begin
+	protected $createTableIfStr = "declare
+begin
   execute immediate '
     %s';
   exception when others then
