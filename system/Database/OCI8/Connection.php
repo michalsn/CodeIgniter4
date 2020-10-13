@@ -252,7 +252,7 @@ class Connection extends BaseConnection implements ConnectionInterface
 		if ($this->resetStmtId === true)
 		{
 			$sql = rtrim($sql, ';');
-			if (strpos(ltrim($sql), 'BEGIN') === 0)
+			if (stripos(ltrim($sql), 'BEGIN') === 0)
 			{
 				$sql .= ';';
 			}
