@@ -41,7 +41,7 @@ class Migration_Create_test_tables extends Migration
 			],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('user', true);
+		$this->forge->createTable('user');
 
 		// Job Table
 		$this->forge->addField([
@@ -75,7 +75,7 @@ class Migration_Create_test_tables extends Migration
 			],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('job', true);
+		$this->forge->createTable('job');
 
 		// Misc Table
 		$this->forge->addField([
@@ -91,7 +91,7 @@ class Migration_Create_test_tables extends Migration
 			'value' => ['type' => 'TEXT'],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('misc', true);
+		$this->forge->createTable('misc');
 
 		//Database Type test table
 		//missing types :
@@ -202,7 +202,7 @@ class Migration_Create_test_tables extends Migration
 		}
 		$this->forge->addField($data_type_fields);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('type_test', true);
+		$this->forge->createTable('type_test');
 
 		// Empty Table
 		$this->forge->addField([
@@ -225,7 +225,7 @@ class Migration_Create_test_tables extends Migration
 			],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('empty', true);
+		$this->forge->createTable('empty');
 
 		// Secondary Table
 		$this->forge->addField([
@@ -241,7 +241,7 @@ class Migration_Create_test_tables extends Migration
 			'value' => ['type' => 'TEXT'],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('secondary', true);
+		$this->forge->createTable('secondary');
 
 		// Stringify Primary key Table
 		$this->forge->addField([
@@ -252,7 +252,7 @@ class Migration_Create_test_tables extends Migration
 			'value' => ['type' => 'TEXT'],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('stringifypkey', true);
+		$this->forge->createTable('stringifypkey');
 
 		// Table without auto increment field
 		$this->forge->addField([
@@ -264,7 +264,7 @@ class Migration_Create_test_tables extends Migration
 			'value' => ['type' => 'TEXT'],
 		]);
 		$this->forge->addKey('key', true);
-		$this->forge->createTable('without_auto_increment', true);
+		$this->forge->createTable('without_auto_increment');
 	}
 
 	public function down()
