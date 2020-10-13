@@ -550,7 +550,7 @@ class Forge
 				return false;
 			}
 		}
-		d($sql); // @phpstan-ignore-line
+
 		if (($result = $this->db->query($sql)) !== false)
 		{
 			if (! isset($this->db->dataCache['table_names'][$table]))
