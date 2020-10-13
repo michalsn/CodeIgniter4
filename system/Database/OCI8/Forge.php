@@ -63,7 +63,8 @@ begin
     %s\';
   exception when others then
     if SQLCODE = -955 then null; else raise; end if;
-end';
+end;
+/';
 
 	/**
 	 * DROP TABLE IF EXISTS statement
