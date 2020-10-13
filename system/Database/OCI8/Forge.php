@@ -48,28 +48,34 @@ class Forge extends \CodeIgniter\Database\Forge
 	/**
 	 * CREATE DATABASE statement
 	 *
-	 * @var string
+	 * @var string|false
 	 */
 	protected $createDatabaseStr = false;
 
 	/**
 	 * CREATE TABLE IF statement
 	 *
-	 * @var string
+	 * @var string|false
 	 */
-	protected $createTableIfStr = false;
+	protected $createTableIfStr = 'declare
+begin
+  execute immediate "
+    %s";
+  exception when others then
+    if SQLCODE = -955 then null; else raise; end if;
+end;';
 
 	/**
 	 * DROP TABLE IF EXISTS statement
 	 *
-	 * @var string
+	 * @var string|false
 	 */
 	protected $dropTableIfStr = false;
 
 	/**
 	 * DROP DATABASE statement
 	 *
-	 * @var string
+	 * @var string|false
 	 */
 	protected $dropDatabaseStr = false;
 
@@ -102,41 +108,40 @@ class Forge extends \CodeIgniter\Database\Forge
 	protected $dropConstraintStr = 'ALTER TABLE %s DROP CONSTRAINT %s';
 
 	//--------------------------------------------------------------------
-
 	/**
 	 * ALTER TABLE
 	 *
-	 * @param string $alter_type ALTER type
-	 * @param string $table      Table name
-	 * @param mixed  $field      Column definition
+	 * @param string $alterType ALTER type
+	 * @param string $table     Table name
+	 * @param mixed  $field     Column definition
 	 *
 	 * @return string|string[]
 	 */
-	protected function _alterTable(string $alter_type, string $table, $field)
+	protected function _alterTable(string $alterType, string $table, $field)
 	{
-		if ($alter_type === 'DROP')
+		if ($alterType === 'DROP')
 		{
-			return parent::_alterTable($alter_type, $table, $field);
+			return parent::_alterTable($alterType, $table, $field);
 		}
-		elseif ($alter_type === 'CHANGE')
+		if ($alterType === 'CHANGE')
 		{
-			$alter_type = 'MODIFY';
+			$alterType = 'MODIFY';
 		}
 
-		$sql          = 'ALTER TABLE ' . $this->db->escapeIdentifiers($table);
-		$nullable_map = array_column($this->db->getFieldData($table), 'nullable', 'name');
-		$sqls         = [];
+		$sql         = 'ALTER TABLE ' . $this->db->escapeIdentifiers($table);
+		$nullableMap = array_column($this->db->getFieldData($table), 'nullable', 'name');
+		$sqls        = [];
 		for ($i = 0, $c = count($field); $i < $c; $i++)
 		{
-			if ($alter_type === 'MODIFY')
+			if ($alterType === 'MODIFY')
 			{
 				// If a null constraint is added to a column with a null constraint,
 				// ORA-01451 will occur,
 				// so add null constraint is used only when it is different from the current null constraint.
-				$is_want_to_add_null  = (strpos($field[$i]['null'], ' NOT') === false);
-				$current_null_addable = $nullable_map[$field[$i]['name']];
+				$isWantToAddNull    = (strpos($field[$i]['null'], ' NOT') === false);
+				$currentNullAddable = $nullableMap[$field[$i]['name']];
 
-				if ($is_want_to_add_null === $current_null_addable)
+				if ($isWantToAddNull === $currentNullAddable)
 				{
 					$field[$i]['null'] = '';
 				}
@@ -157,7 +162,7 @@ class Forge extends \CodeIgniter\Database\Forge
 						. ' IS ' . $field[$i]['comment'];
 				}
 
-				if ($alter_type === 'MODIFY' && ! empty($field[$i]['new_name']))
+				if ($alterType === 'MODIFY' && ! empty($field[$i]['new_name']))
 				{
 					$sqls[] = $sql . ' RENAME COLUMN ' . $this->db->escapeIdentifiers($field[$i]['name'])
 						. ' TO ' . $this->db->escapeIdentifiers($field[$i]['new_name']);
@@ -167,7 +172,7 @@ class Forge extends \CodeIgniter\Database\Forge
 			}
 		}
 
-		$sql .= ' ' . $alter_type . ' ';
+		$sql .= ' ' . $alterType . ' ';
 		$sql .= (count($field) === 1)
 				? $field[0]
 				: '(' . implode(',', $field) . ')';
@@ -182,8 +187,8 @@ class Forge extends \CodeIgniter\Database\Forge
 	/**
 	 * Field attribute AUTO_INCREMENT
 	 *
-	 * @param array &$attributes
-	 * @param array &$field
+	 * @param array $attributes
+	 * @param array $field
 	 *
 	 * @return void
 	 */
@@ -225,7 +230,7 @@ class Forge extends \CodeIgniter\Database\Forge
 	 *
 	 * Performs a data type mapping between different databases.
 	 *
-	 * @param array &$attributes
+	 * @param array $attributes
 	 *
 	 * @return void
 	 */
@@ -264,19 +269,79 @@ class Forge extends \CodeIgniter\Database\Forge
 	//--------------------------------------------------------------------
 
 	/**
+	 * Create Table
+	 *
+	 * @param string  $table       Table name
+	 * @param boolean $ifNotExists Whether to add 'IF NOT EXISTS' condition
+	 * @param array   $attributes  Associative array of table attributes
+	 *
+	 * @return mixed
+	 */
+	protected function _createTable(string $table, bool $ifNotExists, array $attributes)
+	{
+		// For any platforms that don't support Create If Not Exists...
+		if ($ifNotExists === true && $this->createTableIfStr === false)
+		{
+			if ($this->db->tableExists($table))
+			{
+				return true;
+			}
+
+			$ifNotExists = false;
+		}
+
+		//$sql = ($ifNotExists) ? sprintf($this->createTableIfStr, $this->db->escapeIdentifiers($table))
+		//	: 'CREATE TABLE';
+		$sql = 'CREATE TABLE';
+
+		$columns = $this->_processFields(true);
+		for ($i = 0, $c = count($columns); $i < $c; $i++)
+		{
+			$columns[$i] = ($columns[$i]['_literal'] !== false) ? "\n\t" . $columns[$i]['_literal']
+				: "\n\t" . $this->_processColumn($columns[$i]);
+		}
+
+		$columns = implode(',', $columns);
+
+		$columns .= $this->_processPrimaryKeys($table);
+		$columns .= $this->_processForeignKeys($table);
+
+		// Are indexes created from within the CREATE TABLE statement? (e.g. in MySQL)
+		if ($this->createTableKeys === true)
+		{
+			$indexes = $this->_processIndexes($table);
+			if (is_string($indexes))
+			{
+				$columns .= $indexes;
+			}
+		}
+
+		// createTableStr will usually have the following format: "%s %s (%s\n)"
+		$sql = sprintf($this->createTableStr . '%s', $sql, $this->db->escapeIdentifiers($table), $columns,
+			$this->_createTableAttributes($attributes));
+
+		if ($this->createTableIfStr !== false)
+		{
+			$sql = sprintf($this->createTableIfStr, $sql);
+		}
+
+		return $sql;
+	}
+
+	/**
 	 * Drop Table
 	 *
 	 * Generates a platform-specific DROP TABLE string
 	 *
-	 * @param string  $table     Table name
-	 * @param boolean $if_exists Whether to add an IF EXISTS condition
+	 * @param string  $table    Table name
+	 * @param boolean $ifExists Whether to add an IF EXISTS condition
 	 * @param boolean $cascade
 	 *
 	 * @return string
 	 */
-	protected function _dropTable(string $table, bool $if_exists, bool $cascade): string
+	protected function _dropTable(string $table, bool $ifExists, bool $cascade): string
 	{
-		$sql = parent::_dropTable($table, $if_exists, $cascade);
+		$sql = parent::_dropTable($table, $ifExists, $cascade);
 
 		if ($sql !== '' && $cascade === true)
 		{
@@ -313,9 +378,9 @@ class Forge extends \CodeIgniter\Database\Forge
 		{
 			foreach ($this->foreignKeys as $field => $fkey)
 			{
-				$name_index = $table . '_' . $field . '_fk';
+				$nameIndex = $table . '_' . $field . '_fk';
 
-				$sql .= ",\n\tCONSTRAINT " . $this->db->escapeIdentifiers($name_index)
+				$sql .= ",\n\tCONSTRAINT " . $this->db->escapeIdentifiers($nameIndex)
 					. ' FOREIGN KEY(' . $this->db->escapeIdentifiers($field) . ') REFERENCES ' . $this->db->escapeIdentifiers($this->db->DBPrefix . $fkey['table']) . ' (' . $this->db->escapeIdentifiers($fkey['field']) . ')';
 
 				if ($fkey['onDelete'] !== false && in_array($fkey['onDelete'], $allowActions))
