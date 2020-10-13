@@ -109,7 +109,7 @@ class CITestSeeder extends Seeder
 			 $data['type_test'][0]['type_datetime']  = '2020/06/18 05:12:24';
 			 $data['type_test'][0]['type_timestamp'] = '2019/07/18 21:53:21';
 		}
-		elseif ($this->db->DBDriver === 'Postgre')
+		elseif ($this->db->DBDriver === 'Postgre' || $this->db->DBDriver === 'OCI8')
 		{
 			$data['type_test'][0]['type_time'] = '15:22:00';
 			unset($data['type_test'][0]['type_enum']);
@@ -119,6 +119,10 @@ class CITestSeeder extends Seeder
 			unset($data['type_test'][0]['type_double']);
 			unset($data['type_test'][0]['type_decimal']);
 			unset($data['type_test'][0]['type_blob']);
+		}
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			unset($data['type_test'][0]['type_time']);
 		}
 
 		foreach ($data as $table => $dummy_data)
