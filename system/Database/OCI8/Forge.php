@@ -58,8 +58,8 @@ class Forge extends \CodeIgniter\Database\Forge
 	 * @var string|false
 	 */
 	protected $createTableIfStr = "begin
-  execute immediate \'
-    %s\';
+  execute immediate '
+    %s';
   exception when others then
     if SQLCODE = -955 then null; else raise; end if;
 end;";
