@@ -136,11 +136,11 @@ class Migration_Create_test_tables extends Migration
 			'type_date'      => [
 				'type' => 'DATE',
 				'null' => true,
-			],
+			],/*
 			'type_time'      => [
 				'type' => 'TIME',
 				'null' => true,
-			],
+			],*/
 
 			'type_datetime'  => [
 				'type' => 'DATETIME',
@@ -156,7 +156,17 @@ class Migration_Create_test_tables extends Migration
 			],
 
 		];
-		if ($this->db->DBDriver !== 'Postgre')
+		if ($this->db->DBDriver !== 'OCI8')
+		{
+			$extra_fields     = [
+				'type_time' => [
+					'type' => 'TIME',
+					'null' => true,
+				],
+			];
+			$data_type_fields = array_merge($data_type_fields, $extra_fields);
+		}
+		if ($this->db->DBDriver !== 'Postgre' && $this->db->DBDriver !== 'OCI8')
 		{
 			$extra_fields     = [
 				'type_enum'       => [
@@ -259,7 +269,7 @@ class Migration_Create_test_tables extends Migration
 			'key'   => [
 				'type'       => 'VARCHAR',
 				'constraint' => 40,
-				'unique'     => true,
+				'unique'     => $this->db->DBDriver !== 'OCI8' ? true : false,
 			],
 			'value' => ['type' => 'TEXT'],
 		]);
