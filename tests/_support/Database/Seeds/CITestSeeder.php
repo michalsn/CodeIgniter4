@@ -122,7 +122,10 @@ class CITestSeeder extends Seeder
 		}
 		if ($this->db->DBDriver === 'OCI8')
 		{
+			unset($data['type_test'][0]['type_date']);
 			unset($data['type_test'][0]['type_time']);
+			unset($data['type_test'][0]['type_datetime']);
+			unset($data['type_test'][0]['type_timestamp']);
 		}
 
 		foreach ($data as $table => $dummy_data)
