@@ -3,7 +3,7 @@ name: PHPUnit
 on:
   push:
     branches:
-      - action-test-oracle
+      - action-test-oracle2
       - develop
       - '4.*'
     paths:

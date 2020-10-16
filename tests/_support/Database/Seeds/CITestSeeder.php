@@ -120,12 +120,18 @@ class CITestSeeder extends Seeder
 			unset($data['type_test'][0]['type_decimal']);
 			unset($data['type_test'][0]['type_blob']);
 		}
+
 		if ($this->db->DBDriver === 'OCI8')
 		{
-			unset($data['type_test'][0]['type_date']);
-			unset($data['type_test'][0]['type_time']);
-			unset($data['type_test'][0]['type_datetime']);
-			unset($data['type_test'][0]['type_timestamp']);
+			unset(
+				$data['type_test'][0]['type_time'], 
+				$data['type_test'][0]['type_date'],
+				$data['type_test'][0]['type_datetime'],
+				$data['type_test'][0]['type_timestamp']
+			);
+			//$data['type_test'][0]['type_date'] = 'DATE "2020-01-11"';
+			//$data['type_test'][0]['type_datetime'] = '2020-01-11';
+			//$data['type_test'][0]['type_timestamp'] = '2020-01-11';
 		}
 
 		foreach ($data as $table => $dummy_data)
@@ -134,7 +140,14 @@ class CITestSeeder extends Seeder
 
 			foreach ($dummy_data as $single_dummy_data)
 			{
-				$this->db->table($table)->insert($single_dummy_data);
+				$db = $this->db->table($table);
+				if ($this->db->DBDriver === 'OCI8' && $table === 'type_test')
+				{
+					$db->set('"type_date"', "TO_DATE('2020-01-11', 'YYYY-MM-DD')", false);
+					$db->set('type_datetime', '2020-06-18 05:12:24', true);
+				}
+
+				$db->insert($single_dummy_data);
 			}
 		}
 	}
