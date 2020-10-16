@@ -66,7 +66,6 @@ jobs:
         image: quay.io/maksymbilenko/oracle-12c
         ports:
           - 1521:1521
-        options: --health-cmd "sql system/oracle@//localhost:1521/xe" --health-interval=10s --health-timeout=5s --health-retries=3
       redis:
         image: redis
         ports:
@@ -74,6 +73,9 @@ jobs:
         options: --health-cmd "redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+      - name: Oracle session
+        run: echo 'alter system disable restricted session;' | sqlplus system/oracle@//localhost:1521/xe as sysdba
+        
       - name: Checkout
         uses: actions/checkout@v2
 
