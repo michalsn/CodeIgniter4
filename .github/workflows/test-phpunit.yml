@@ -74,8 +74,9 @@ jobs:
 
     steps:
       - name: Oracle session
-        run: echo 'alter system disable restricted session;' | /oracle/product/12.1/db/bin/sqlplus system/oracle@//localhost:1521/xe as sysdba
-        
+        #run: echo 'alter system disable restricted session;' | /oracle/product/12.1/db/bin/sqlplus system/oracle@//localhost:1521/xe as sysdba
+        run: find / -type f -name sqlplus
+
       - name: Checkout
         uses: actions/checkout@v2
 
