@@ -1237,7 +1237,10 @@ abstract class BaseConnection implements ConnectionInterface
 		// In some cases, especially 'from', we end up running through
 		// protect_identifiers twice. This algorithm won't work when
 		// it contains the escapeChar so strip it out.
-		$item = trim($item, $this->escapeChar);
+		if ($protectIdentifiers)
+		{
+			$item = trim($item, $this->escapeChar);
+		}
 
 		// Is there a table prefix? If not, no need to insert it
 		if ($this->DBPrefix !== '')
@@ -1621,6 +1624,8 @@ abstract class BaseConnection implements ConnectionInterface
 			$this->initialize();
 		}
 
+		$table = trim($table, $this->escapeChar);
+
 		if (false === ($sql = $this->_listColumns($table)))
 		{
 			if ($this->DBDebug)
@@ -1670,6 +1675,7 @@ abstract class BaseConnection implements ConnectionInterface
 	 */
 	public function fieldExists(string $fieldName, string $tableName): bool
 	{
+		$tableName = trim($tableName, $this->escapeChar);
 		return in_array($fieldName, $this->getFieldNames($tableName), true);
 	}
 
@@ -1683,6 +1689,7 @@ abstract class BaseConnection implements ConnectionInterface
 	 */
 	public function getFieldData(string $table)
 	{
+		$table = trim($table, $this->escapeChar);
 		return $this->_fieldData($this->protectIdentifiers($table, true, false, false));
 	}
 
@@ -1696,6 +1703,7 @@ abstract class BaseConnection implements ConnectionInterface
 	 */
 	public function getIndexData(string $table)
 	{
+		$table = trim($table, $this->escapeChar);
 		return $this->_indexData($this->protectIdentifiers($table, true, false, false));
 	}
 
@@ -1709,6 +1717,7 @@ abstract class BaseConnection implements ConnectionInterface
 	 */
 	public function getForeignKeyData(string $table)
 	{
+		$table = trim($table, $this->escapeChar);
 		return $this->_foreignKeyData($this->protectIdentifiers($table, true, false, false));
 	}
 

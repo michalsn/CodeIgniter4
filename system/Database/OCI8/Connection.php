@@ -161,9 +161,16 @@ class Connection extends BaseConnection implements ConnectionInterface
 
 		$func = ($persistent === true) ? 'oci_pconnect' : 'oci_connect';
 
-		return empty($this->charset)
+		$this->connID = empty($this->charset)
 			? $func($this->username, $this->password, $this->DSN)
 			: $func($this->username, $this->password, $this->DSN, $this->charset);
+
+		if (isset($this->strictOn) && ! $this->strictOn)
+		{
+			$this->simpleQuery("ALTER SESION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS'");
+		}
+
+		return $this->connID;
 	}
 
 	//--------------------------------------------------------------------
@@ -252,7 +259,7 @@ class Connection extends BaseConnection implements ConnectionInterface
 		if ($this->resetStmtId === true)
 		{
 			$sql = rtrim($sql, ';');
-			if (stripos(ltrim($sql), 'BEGIN') === 0 || stripos(ltrim($sql), 'DECLARE') === 0)
+			if (stripos(ltrim($sql), 'BEGIN') === 0)
 			{
 				$sql .= ';';
 			}

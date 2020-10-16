@@ -57,13 +57,13 @@ class Forge extends \CodeIgniter\Database\Forge
 	 *
 	 * @var string|false
 	 */
-	protected $createTableIfStr = "declare
-begin
-  execute immediate '
-    %s';
-  exception when others then
-    if SQLCODE = -955 then null; else raise; end if;
-end;";
+	protected $createTableIfStr = <<<SQL
+BEGIN
+  EXECUTE IMMEDIATE '%s';
+  EXCEPTION WHEN OTHERS THEN
+    IF SQLCODE = -955 THEN NULL; ELSE RAISE; END IF;
+END;
+SQL;
 
 	/**
 	 * DROP TABLE IF EXISTS statement
