@@ -63,7 +63,7 @@ jobs:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
       oracle:
-        image: quay.io/maksymbilenko/oracle-12c
+        image: oracleinanutshell/oracle-xe-11g
         ports:
           - 1521:1521
       redis:
@@ -73,10 +73,6 @@ jobs:
         options: --health-cmd "redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Oracle session
-        #run: echo 'alter system disable restricted session;' | /oracle/product/12.1/db/bin/sqlplus system/oracle@//localhost:1521/xe as sysdba
-        run: find / -type f -name sqlplus
-
       - name: Checkout
         uses: actions/checkout@v2
 
