@@ -167,7 +167,7 @@ class Connection extends BaseConnection implements ConnectionInterface
 
 		if (isset($this->strictOn) && ! $this->strictOn)
 		{
-			$this->simpleQuery("ALTER SESION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS'");
+			$this->simpleQuery("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS'");
 		}
 
 		return $this->connID;
@@ -235,14 +235,14 @@ class Connection extends BaseConnection implements ConnectionInterface
 
 		if (! $this->connID || ($version_string = oci_server_version($this->connID)) === false)
 		{
-			return false;
+			return '';
 		}
 		elseif (preg_match('#Release\s(\d+(?:\.\d+)+)#', $version_string, $match))
 		{
 			return $this->dataCache['version'] = $match[1];
 		}
 
-		return false;
+		return '';
 	}
 
 	//--------------------------------------------------------------------
@@ -569,9 +569,10 @@ SQL;
 	/**
 	 * Stored Procedure.  Executes a stored procedure
 	 *
-	 * @param  string	package name in which the stored procedure is in
-	 * @param  string	stored procedure name to execute
-	 * @param  array	parameters
+	 * @param string $package   Package name in which the stored procedure is in
+	 * @param string $procedure Stored procedure name to execute
+	 * @param array  $params    Parameters
+	 *
 	 * @return mixed
 	 *
 	 * params array keys
@@ -662,15 +663,15 @@ SQL;
 		{
 			$error = oci_error($this->cursorId);
 		}
-		elseif (is_resource($this->stmtId))
+		elseif (is_resource($this->stmtId)) // @phpstan-ignore-line
 		{
 			$error = oci_error($this->stmtId);
 		}
-		elseif (is_resource($this->connID))
+		elseif (is_resource($this->connID)) // @phpstan-ignore-line
 		{
 			$error = oci_error($this->connID);
 		}
-		else
+		else // @phpstan-ignore-line
 		{
 			$error = oci_error();
 		}
@@ -707,7 +708,7 @@ SQL;
 
 		$column_type_list    = array_column($field_datas, 'type', 'name');
 		$primary_column_name = '';
-		foreach ((is_array($indexs) ? $indexs : [] ) as $index)
+		foreach ($indexs as $index)
 		{
 			if ($index->type !== 'PRIMARY' || count($index->fields) !== 1)
 			{
@@ -743,7 +744,7 @@ SQL;
 	 */
 	protected function buildDSN()
 	{
-		$this->DSN === '' || $this->DSN = '';
+		$this->DSN === '' || $this->DSN = ''; // @phpstan-ignore-line
 
 		// Legacy support for TNS in the hostname configuration field
 		$this->hostname = str_replace(["\n", "\r", "\t", ' '], '', $this->hostname);
@@ -787,7 +788,7 @@ SQL;
 		}
 
 		$this->database = str_replace(["\n", "\r", "\t", ' '], '', $this->database);
-		foreach ($valid_dsns as $regexp)
+		foreach ($this->validDSNs as $regexp)
 		{
 			if (preg_match($regexp, $this->database))
 			{

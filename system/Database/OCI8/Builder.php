@@ -293,11 +293,12 @@ class Builder extends BaseBuilder
 	 *
 	 * Generates a platform-specific LIMIT clause.
 	 *
-	 * @param string $sql SQL Query
+	 * @param string  $sql          SQL Query
+	 * @param boolean $offsetIgnore Ignore offset
 	 *
 	 * @return string
 	 */
-	protected function _limit(string $sql): string
+	protected function _limit(string $sql, bool $offsetIgnore = false): string
 	{
 		if (version_compare($this->db->getVersion(), '12.1', '>='))
 		{
