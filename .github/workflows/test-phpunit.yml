@@ -75,8 +75,8 @@ jobs:
     steps:
       - name: Oracle setup
         run: |
-          chmod +x tests/_support/_github/oracle.sh
-          tests/_support/_github/oracle.sh 
+          source /home/oracle/.bashrc
+          echo "CREATE USER test IDENTIFIED BY 'Oracle18' QUOTA 50M ON system;GRANT DBA TO test;" | sqlplus sys/Oracle18@localhost/XE
 
       - name: Checkout
         uses: actions/checkout@v2
