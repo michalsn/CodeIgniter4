@@ -75,7 +75,7 @@ jobs:
     steps:
       - name: Oracle setup
         run: |
-          echo -e "CREATE USER test IDENTIFIED BY 'Oracle18' QUOTA 50M ON system; \n GRANT DBA TO test;" | sqlplus -s sys/Oracle18@localhost/XE
+          echo -e "CREATE USER test IDENTIFIED BY 'Oracle18' QUOTA 50M ON system; \n GRANT DBA TO test;" | sqlcl -s sys/Oracle18@localhost/XE
 
       - name: Checkout
         uses: actions/checkout@v2
