@@ -74,9 +74,9 @@ class Registrar
 		'OCI8'    => [
 			'DSN'      => '',
 			'hostname' => 'localhost',
-			'username' => 'sysdba',
+			'username' => 'system',
 			'password' => 'oracle',
-			'database' => 'XE',
+			'database' => 'xe',
 			'DBDriver' => 'OCI8',
 			'DBPrefix' => 'db_',
 			'pConnect' => false,
