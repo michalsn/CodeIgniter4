@@ -68,7 +68,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2, pecl
-          extensions: imagick, sqlsrv-preview
+          extensions: imagick, sqlsrv-5.9.0preview1
           coverage: pcov
         env:
           update: true
