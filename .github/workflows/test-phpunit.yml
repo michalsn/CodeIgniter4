@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.2', '7.3', '7.4.10']
+        php-versions: ['7.2', '7.3', '7.4']
         db-platforms: ['Sqlsrv']
 
     services:
@@ -68,7 +68,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2, pecl
-          extensions: imagick, sqlsrv
+          extensions: imagick, sqlsrv-5.8.1
           coverage: pcov
         env:
           update: true
