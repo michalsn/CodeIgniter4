@@ -71,7 +71,7 @@ jobs:
           extensions: imagick, sqlsrv
           coverage: pcov
         env:
-          update: false
+          update: true
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
