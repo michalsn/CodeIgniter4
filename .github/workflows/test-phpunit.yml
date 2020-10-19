@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
+        php-versions: ['7.2', '7.3', '7.4.10']
         db-platforms: ['Sqlsrv']
 
     services:
@@ -68,10 +68,10 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2, pecl
-          extensions: imagick, sqlsrv-5.9.0preview
+          extensions: imagick, sqlsrv
           coverage: pcov
-        env:
-          update: true
+        #env:
+          #update: true
 
       - name: Install Memcached
         uses: niden/actions-memcached@v7
