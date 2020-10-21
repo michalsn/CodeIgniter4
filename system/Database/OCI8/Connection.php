@@ -42,6 +42,7 @@ namespace CodeIgniter\Database\OCI8;
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Database\Exceptions\DatabaseException;
+use ErrorException;
 use stdClass;
 
 /**
@@ -252,27 +253,40 @@ class Connection extends BaseConnection implements ConnectionInterface
 	 *
 	 * @param string $sql
 	 *
-	 * @return resource
+	 * @return mixed
 	 */
 	public function execute(string $sql)
 	{
-		if ($this->resetStmtId === true)
+		try
 		{
-			$sql = rtrim($sql, ';');
-			if (stripos(ltrim($sql), 'BEGIN') === 0)
+			if ($this->resetStmtId === true)
 			{
-				$sql .= ';';
+				$sql = rtrim($sql, ';');
+				if (stripos(ltrim($sql), 'BEGIN') === 0)
+				{
+					$sql .= ';';
+				}
+				$this->stmtId = oci_parse($this->connID, $sql);
 			}
-			$this->stmtId = oci_parse($this->connID, $sql);
-		}
 
-		if (strpos($sql, 'RETURNING ROWID INTO :CI_OCI8_ROWID') !== false)
+			if (strpos($sql, 'RETURNING ROWID INTO :CI_OCI8_ROWID') !== false)
+			{
+				oci_bind_by_name($this->stmtId, ':CI_OCI8_ROWID', $this->rowId, 255);
+			}
+
+			oci_set_prefetch($this->stmtId, 1000);
+			return (oci_execute($this->stmtId, $this->commitMode)) ? $this->stmtId : false;
+		}
+		catch (ErrorException $e)
 		{
-			oci_bind_by_name($this->stmtId, ':CI_OCI8_ROWID', $this->rowId, 255);
+			log_message('error', $e);
+			if ($this->DBDebug)
+			{
+				throw $e;
+			}
 		}
 
-		oci_set_prefetch($this->stmtId, 1000);
-		return (oci_execute($this->stmtId, $this->commitMode)) ? $this->stmtId : false;
+		return false;
 	}
 
 	//--------------------------------------------------------------------
