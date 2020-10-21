@@ -63,7 +63,7 @@ jobs:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
       oracle:
-        image: larmic/oracle-xe
+        image: quay.io/maksymbilenko/oracle-12c
         ports:
           - 1521:1521
       redis:
@@ -75,7 +75,7 @@ jobs:
     steps:
       - name: Oracle setup
         run: |
-          echo -e "CREATE USER test IDENTIFIED BY 'Oracle18' QUOTA 50M ON system; \n GRANT DBA TO test;" | sqlcl -s sys/Oracle18@localhost/XE
+          echo -e "CREATE USER test IDENTIFIED BY 'oracle' QUOTA 50M ON system; \n GRANT DBA TO test;" | sqlcl -s sys/oracle@localhost/XE
 
       - name: Checkout
         uses: actions/checkout@v2
