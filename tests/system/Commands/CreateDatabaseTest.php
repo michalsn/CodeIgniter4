@@ -55,6 +55,11 @@ class CreateDatabaseTest extends CIUnitTestCase
 
 	public function testCreateDatabase()
 	{
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			$this->markTestSkipped('OCI8 does not support create database.');
+		}
+
 		command('db:create foobar');
 		$this->assertStringContainsString('successfully created.', $this->getBuffer());
 	}
@@ -78,6 +83,11 @@ class CreateDatabaseTest extends CIUnitTestCase
 		if ($this->connection instanceof Connection)
 		{
 			$this->markTestSkipped('Needs to run on non-SQLite3 drivers.');
+		}
+
+		if ($this->db->DBDriver === 'OCI8')
+		{
+			$this->markTestSkipped('OCI8 does not support create database.');
 		}
 
 		command('db:create foobar');
