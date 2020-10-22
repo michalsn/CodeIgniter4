@@ -63,7 +63,7 @@ jobs:
           - 5432:5432
         options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
       oracle:
-        image: quillbuilduser/oracle-18-xe
+        image: quay.io/maksymbilenko/oracle-12c
         ports:
           - 1521:1521
       redis:
@@ -73,9 +73,9 @@ jobs:
         options: --health-cmd "redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Oracle setup
-        run: |
-          echo -e "CREATE USER test IDENTIFIED BY 'oracle' QUOTA 50M ON system; \n GRANT DBA TO test;" | $ORACLE_HOME/bin/sqlplus -s sys/Oracle18@localhost/XE
+      #- name: Oracle setup
+      #  run: |
+      #    echo -e "CREATE USER test IDENTIFIED BY 'oracle' QUOTA 50M ON system; \n GRANT DBA TO test;" | $ORACLE_HOME/bin/sqlplus -s sys/oracle@localhost/XE
 
       - name: Checkout
         uses: actions/checkout@v2
