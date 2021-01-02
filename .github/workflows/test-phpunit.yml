@@ -89,7 +89,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
-          extensions: imagick, sqlsrv
+          extensions: imagick, sqlsrv-beta
           coverage: xdebug
         env:
           update: true
