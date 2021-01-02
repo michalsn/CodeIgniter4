@@ -357,9 +357,7 @@ class Builder extends BaseBuilder
 			return $this->db->escapeIdentifiers($item);
 		}, $keyFields);
 
-		$fullTableName = $this->getFullName($table);
-
-		return 'INSERT INTO ' . $fullTableName . ' (' . implode(',', $keys) . ') VALUES (' . implode(',', $values) . ');';
+		return 'INSERT INTO ' . $this->getFullName($table) . ' (' . implode(',', $keys) . ') VALUES (' . implode(',', $values) . ');';
 	}
 
 	/**
@@ -413,9 +411,7 @@ class Builder extends BaseBuilder
 	 */
 	protected function _delete(string $table): string
 	{
-		$fullTableName = $this->getFullName($table);
-
-		return 'DELETE' . (empty($this->QBLimit) ? '' : ' TOP (' . $this->QBLimit . ') ') . ' FROM ' . $fullTableName . $this->compileWhereHaving('QBWhere');
+		return 'DELETE' . (empty($this->QBLimit) ? '' : ' TOP (' . $this->QBLimit . ') ') . ' FROM ' . $this->getFullName($table) . $this->compileWhereHaving('QBWhere');
 	}
 
 	/**
