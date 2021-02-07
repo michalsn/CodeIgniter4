@@ -181,6 +181,27 @@ class Builder extends BaseBuilder
 	}
 
 	/**
+	 * FROM tables
+	 *
+	 * Groups tables in FROM clauses if needed, so there is no confusion
+	 * about operator precedence.
+	 *
+	 * Note: This is only used (and overridden) by MySQL and CUBRID.
+	 *
+	 * @return string
+	 */
+	protected function _fromTables(): string
+	{
+		$from = [];
+		foreach ($this->QBFrom as $value)
+		{
+			$from[] = $this->getFullName($value);
+		}
+
+		return implode(', ', $from);
+	}
+
+	/**
 	 * Get full name of the table
 	 *
 	 * @param string $table

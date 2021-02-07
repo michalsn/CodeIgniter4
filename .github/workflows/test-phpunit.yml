@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - '4.*'
+      - fix/sqlrv_schema
     paths:
       - 'app/**'
       - 'public/**'
