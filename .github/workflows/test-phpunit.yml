@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - '4.*'
+      - sqlsrv-debug
     paths:
       - 'app/**'
       - 'public/**'
@@ -41,7 +42,7 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: ['7.3', '7.4', '8.0']
-        db-platforms: ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']
+        db-platforms: ['SQLSRV']
 
     services:
       mysql:
@@ -64,12 +65,12 @@ jobs:
       mssql:
         image: mcr.microsoft.com/mssql/server:2019-CU10-ubuntu-20.04
         env:
-          MSSQL_SA_PASSWORD: 1Secure*Password1
+          SA_PASSWORD: 1Secure*Password1
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
         ports:
           - 1433:1433
-        options: --name=mssql --health-cmd="/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,1433 -U sa -P '1Secure*Password1' -Q 'SELECT @@VERSION'" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P 1Secure*Password1 -Q 'SELECT @@VERSION'" --health-interval=10s --health-timeout=5s --health-retries=3
       redis:
         image: redis
         ports:
@@ -83,7 +84,7 @@ jobs:
     steps:
       - name: Create database for MSSQL Server
         if: matrix.db-platforms == 'SQLSRV'
-        run: docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,1433 -U sa -P '1Secure*Password1' -Q 'CREATE DATABASE test'
+        run: sqlcmd -S 127.0.0.1 -U sa -P 1Secure*Password1 -Q "CREATE DATABASE test"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -93,7 +94,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer, pecl
-          extensions: imagick, sqlsrv-5.9.0preview1, gd, sqlite3, redis, memcached, pgsql
+          extensions: imagick, sqlsrv, gd, sqlite3, redis, memcached, pgsql
           coverage: xdebug
         env:
           update: true
