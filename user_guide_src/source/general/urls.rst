@@ -15,6 +15,8 @@ Your URLs can be defined using the :doc:`URI Routing </incoming/routing>` featur
 
 The :doc:`URI Library <../libraries/uri>` and the :doc:`URL Helper <../helpers/url_helper>` contain functions that make it easy to work with your URI data.
 
+.. _urls-url-structure:
+
 URL Structure
 =============
 
@@ -27,12 +29,15 @@ When you have the Base URL **https://www.example.com/** and imagine the followin
 
 We use the following terms:
 
-======== ============================
-Base URL **https://www.example.com/**
-URI path /blog/news/2022/10
-Route    /blog/news/2022/10
-Query    page=2
-======== ============================
+========== ============================ =========================================
+Term       Example                      Description
+========== ============================ =========================================
+Base URL   **https://www.example.com/** Base URL is often denoted as **baseURL**.
+URI path   /blog/news/2022/10
+Route path /blog/news/2022/10           The URI path relative to the Base URL.
+                                        It is also called as **URI string**.
+Query      page=2
+========== ============================ =========================================
 
 Base URL contains Sub folders
 -----------------------------
@@ -43,12 +48,15 @@ When you have the Base URL **https://www.example.com/ci-blog/** and imagine the 
 
 We use the following terms:
 
-======== ====================================
-Base URL **https://www.example.com/ci-blog/**
-URI path /ci-blog/blog/news/2022/10
-Route    /blog/news/2022/10
-Query    page=2
-======== ====================================
+========== ==================================== =========================================
+Term       Example                              Description
+========== ==================================== =========================================
+Base URL   **https://www.example.com/ci-blog/** Base URL is often denoted as **baseURL**.
+URI path   /ci-blog/blog/news/2022/10
+Route path /blog/news/2022/10                   The URI path relative to the Base URL.
+                                                It is also called as **URI string**.
+Query      page=2
+========== ==================================== =========================================
 
 .. _urls-remove-index-php:
 

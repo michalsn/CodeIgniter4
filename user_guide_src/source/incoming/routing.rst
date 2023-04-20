@@ -151,6 +151,8 @@ will only match **product/123** and generate 404 errors for other example.
 Array Callable Syntax
 =====================
 
+.. versionadded:: 4.2.0
+
 Since v4.2.0, you can use array callable syntax to specify the controller:
 
 .. literalinclude:: routing/013.php
@@ -314,7 +316,7 @@ Reverse routing allows you to define the controller and method, as well as any p
 to, and have the router lookup the current route to it. This allows route definitions to change without you having
 to update your application code. This is typically used within views to create links.
 
-For example, if you have a route to a photo gallery that you want to link to, you can use the ``url_to()`` helper
+For example, if you have a route to a photo gallery that you want to link to, you can use the :php:func:`url_to()` helper
 function to get the route that should be used. The first parameter is the fully qualified Controller and method,
 separated by a double colon (``::``), much like you would use when writing the initial route itself. Any parameters that
 should be passed to the route are passed in next:
@@ -327,7 +329,7 @@ Using Named Routes
 ==================
 
 You can name routes to make your application less fragile. This applies a name to a route that can be called
-later, and even if the route definition changes, all of the links in your application built with ``route_to()``
+later, and even if the route definition changes, all of the links in your application built with :php:func:`url_to()`
 will still work without you having to make any changes. A route is named by passing in the ``as`` option
 with the name of the route:
 
@@ -427,12 +429,16 @@ You may also supply arguments to be passed to the alias filter's ``before()`` an
 Classname Filter
 ^^^^^^^^^^^^^^^^
 
+.. versionadded:: 4.1.5
+
 You specify a filter classname for the filter value:
 
 .. literalinclude:: routing/036.php
 
 Multiple Filters
 ^^^^^^^^^^^^^^^^
+
+.. versionadded:: 4.1.5
 
 .. important:: *Multiple filters* is disabled by default. Because it breaks backward compatibility. If you want to use it, you need to configure. See :ref:`upgrade-415-multiple-filters-for-a-route` for the details.
 
@@ -604,6 +610,8 @@ For an example use of lowering the priority see :ref:`routing-priority`:
 Auto Routing (Improved)
 ***********************
 
+.. versionadded:: 4.2.0
+
 Since v4.2.0, the new more secure Auto Routing has been introduced.
 
 .. note:: If you are familiar with Auto Routing, which was enabled by default
@@ -655,6 +663,8 @@ and executes ``getHello()`` method with passing ``'1'`` as the first argument.
 
 See :ref:`Auto Routing in Controllers <controller-auto-routing-improved>` for more info.
 
+.. _routing-auto-routing-improved-configuration-options:
+
 Configuration Options
 =====================
 
@@ -663,17 +673,25 @@ These options are available at the top of **app/Config/Routes.php**.
 Default Controller
 ------------------
 
+For Site Root URI
+^^^^^^^^^^^^^^^^^
+
 When a user visits the root of your site (i.e., **example.com**) the controller to use is determined by the value set by
-the ``setDefaultController()`` method, unless a route exists for it explicitly. The default value for this is ``Home``
+the ``setDefaultController()`` method, unless a route exists for it explicitly.
+
+The default value for this is ``Home``
 which matches the controller at **app/Controllers/Home.php**:
 
 .. literalinclude:: routing/047.php
+
+For Directory URI
+^^^^^^^^^^^^^^^^^
 
 The default controller is also used when no matching route has been found, and the URI would point to a directory
 in the controllers directory. For example, if the user visits **example.com/admin**, if a controller was found at
 **app/Controllers/Admin/Home.php**, it would be used.
 
-.. note:: You cannot access the default controller with the URI of the controller name.
+.. important:: You cannot access the default controller with the URI of the controller name.
     When the default controller is ``Home``, you can access **example.com/**, but if you access **example.com/home**, it will be not found.
 
 See :ref:`Auto Routing in Controllers <controller-auto-routing-improved>` for more info.
@@ -690,7 +708,7 @@ In this example, if the user were to visit **example.com/products**, and a ``Pro
 
 .. literalinclude:: routing/048.php
 
-.. note:: You cannot access the controller with the URI of the default method name.
+.. important:: You cannot access the controller with the URI of the default method name.
     In the example above, you can access **example.com/products**, but if you access **example.com/products/listall**, it will be not found.
 
 .. _auto-routing-legacy:
@@ -739,6 +757,8 @@ and executes ``index()`` method with passing ``'1'`` as the first argument.
 
 See :ref:`Auto Routing (Legacy) in Controllers <controller-auto-routing-legacy>` for more info.
 
+.. _routing-auto-routing-legacy-configuration-options:
+
 Configuration Options (Legacy)
 ==============================
 
@@ -747,11 +767,17 @@ These options are available at the top of **app/Config/Routes.php**.
 Default Controller (Legacy)
 ---------------------------
 
+For Site Root URI (Legacy)
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 When a user visits the root of your site (i.e., example.com) the controller to use is determined by the value set by
 the ``setDefaultController()`` method, unless a route exists for it explicitly. The default value for this is ``Home``
 which matches the controller at **app/Controllers/Home.php**:
 
 .. literalinclude:: routing/047.php
+
+For Directory URI (Legacy)
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The default controller is also used when no matching route has been found, and the URI would point to a directory
 in the controllers directory. For example, if the user visits **example.com/admin**, if a controller was found at
@@ -820,6 +846,25 @@ When you use Auto Routing (Improved), the output is like the following:
 The *Method* will be like ``GET(auto)``.
 
 ``/..`` in the *Route* column indicates one segment. ``[/..]`` indicates it is optional.
+
+If you see a route starting with ``x`` like the following, it indicates an invalid
+route that won't be routed, but the controller has a public method for routing.
+
+.. code-block:: none
+
+    +-----------+----------------+------+-------------------------------------+----------------+---------------+
+    | Method    | Route          | Name | Handler                             | Before Filters | After Filters |
+    +-----------+----------------+------+-------------------------------------+----------------+---------------+
+    | GET(auto) | x home/foo     |      | \App\Controllers\Home::getFoo       | <unknown>      | <unknown>     |
+    +-----------+----------------+------+-------------------------------------+----------------+---------------+
+
+The above example shows you have the ``\App\Controllers\Home::getFoo()`` method,
+but it is not routed because it is the default controller (``Home`` by default)
+and the default controller name must be omitted in the URI. You should delete
+the ``getFoo()`` method.
+
+.. note:: Prior to v4.3.4, the invalid route is displayed as a normal route
+    due to a bug.
 
 Auto Routing (Legacy)
 ---------------------

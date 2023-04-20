@@ -1539,7 +1539,11 @@ class Email
             $this->setReplyTo($this->headers['From']);
         }
 
-        if (empty($this->recipients) && ! isset($this->headers['To']) && empty($this->BCCArray) && ! isset($this->headers['Bcc']) && ! isset($this->headers['Cc'])) {
+        if (
+            empty($this->recipients) && ! isset($this->headers['To'])
+            && empty($this->BCCArray) && ! isset($this->headers['Bcc'])
+            && ! isset($this->headers['Cc'])
+        ) {
             $this->setErrorMessage(lang('Email.noRecipients'));
 
             return false;
@@ -1879,7 +1883,10 @@ class Email
             $crypto = stream_socket_enable_crypto(
                 $this->SMTPConnect,
                 true,
-                STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
+                STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT
             );
 
             if ($crypto !== true) {

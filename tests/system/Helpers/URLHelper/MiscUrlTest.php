@@ -835,6 +835,8 @@ final class MiscUrlTest extends CIUnitTestCase
         $_SERVER['HTTP_HOST'] = 'example.com';
 
         $routes = service('routes');
+        // @TODO Do not put any placeholder after (:any).
+        //       Because the number of parameters passed to the controller method may change.
         $routes->add('path/(:any)/to/(:num)', 'myController::goto/$1/$2', ['as' => 'gotoPage']);
         $routes->add('route/(:any)/to/(:num)', 'myOtherController::goto/$1/$2');
 
@@ -881,5 +883,21 @@ final class MiscUrlTest extends CIUnitTestCase
                 'Nope::doesNotExist',
             ],
         ];
+    }
+
+    public function testUrlToWithSupportedLocaleInRoute()
+    {
+        Services::createRequest(new App());
+        $routes = service('routes');
+        $routes->add(
+            '{locale}/path/(:segment)/to/(:num)',
+            'myController::goto/$1/$2',
+            ['as' => 'path-to']
+        );
+
+        $this->assertSame(
+            'http://example.com/index.php/en/path/string/to/13',
+            url_to('path-to', 'string', 13, 'en')
+        );
     }
 }

@@ -31,13 +31,14 @@ The Current URI
 ---------------
 
 Many times, all you really want is an object representing the current URL of this request.
-You can use one of the functions available in the **url_helper**:
+You can use one of the functions available in the :doc:`../helpers/url_helper`:
 
 .. literalinclude:: uri/004.php
 
 You must pass ``true`` as the first parameter, otherwise, it will return the string representation of the current URL.
+
 This URI is based on the path (relative to your ``baseURL``) as determined by the current request object and
-your settings in ``Config\App`` (baseURL, indexPage, and forceGlobalSecureRequests).
+your settings in ``Config\App`` (``baseURL``, ``indexPage``, and ``forceGlobalSecureRequests``).
 Assuming that you're in a controller that extends ``CodeIgniter\Controller`` you can get this relative path:
 
 .. literalinclude:: uri/005.php
@@ -95,7 +96,7 @@ If you do not want to display the port, pass in ``true`` as the only parameter:
 
 .. note:: If the current port is the default port for the scheme it will never be displayed.
 
-Userinfo
+UserInfo
 --------
 
 The userinfo section is simply the username and password that you might see with an FTP URI. While you can get
@@ -138,24 +139,40 @@ can be used to manipulate it:
 Query
 -----
 
-The query variables can be manipulated through the class using simple string representations. Query values can only
+The query data can be manipulated through the class using simple string representations.
+
+Getting/Setting Query
+^^^^^^^^^^^^^^^^^^^^^
+
+Query values can only
 be set as a string currently.
 
 .. literalinclude:: uri/017.php
 
+The ``setQuery()`` method overwrite any existing query variables.
+
 .. note:: Query values cannot contain fragments. An InvalidArgumentException will be thrown if it does.
+
+Setting Query from Array
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can set query values using an array:
 
 .. literalinclude:: uri/018.php
 
-The ``setQuery()`` and ``setQueryArray()`` methods overwrite any existing query variables. You can add a value to the
+The ``setQueryArray()`` method overwrite any existing query variables.
+
+Adding Query Value
+^^^^^^^^^^^^^^^^^^
+
+You can add a value to the
 query variables collection without destroying the existing query variables with the ``addQuery()`` method. The first
 parameter is the name of the variable, and the second parameter is the value:
 
 .. literalinclude:: uri/019.php
 
-**Filtering Query Values**
+Filtering Query Values
+^^^^^^^^^^^^^^^^^^^^^^
 
 You can filter the query values returned by passing an options array to the ``getQuery()`` method, with either an
 *only* or an *except* key:
@@ -163,6 +180,10 @@ You can filter the query values returned by passing an options array to the ``ge
 .. literalinclude:: uri/020.php
 
 This only changes the values returned during this one call. If you need to modify the URI's query values more permanently,
+
+Changing Query Values
+^^^^^^^^^^^^^^^^^^^^^
+
 you can use the ``stripQuery()`` and ``keepQuery()`` methods to change the actual object's query variable collection:
 
 .. literalinclude:: uri/021.php
@@ -174,7 +195,7 @@ you can use the ``stripQuery()`` and ``keepQuery()`` methods to change the actua
 Fragment
 --------
 
-Fragments are the portion at the end of the URL, preceded by the pound-sign (#). In HTML URLs these are links
+Fragments are the portion at the end of the URL, preceded by the pound-sign (``#``). In HTML URLs these are links
 to an on-page anchor. Media URI's can make use of them in various other ways.
 
 .. literalinclude:: uri/022.php
@@ -183,7 +204,13 @@ to an on-page anchor. Media URI's can make use of them in various other ways.
 URI Segments
 ============
 
-Each section of the path between the slashes is a single segment. The URI class provides a simple way to determine
+Each section of the path between the slashes is a single segment.
+
+.. note:: In the case of your site URI, URI Segments mean only the URI path part
+    relative to the baseURL. If your baseURL contains sub folders, the values
+    will be different from the current URI path.
+
+The URI class provides a simple way to determine
 what the values of the segments are. The segments start at 1 being the furthest left of the path.
 
 .. literalinclude:: uri/023.php
@@ -191,6 +218,10 @@ what the values of the segments are. The segments start at 1 being the furthest 
 You can also set a different default value for a particular segment by using the second parameter of the ``getSegment()`` method. The default is empty string.
 
 .. literalinclude:: uri/024.php
+
+.. note:: You can get the last +1 segment. When you try to get the last +2 or
+    more segment, an exception will be thrown by default. You could prevent
+    throwing exceptions with the ``setSilent()`` method.
 
 You can get a count of the total segments:
 

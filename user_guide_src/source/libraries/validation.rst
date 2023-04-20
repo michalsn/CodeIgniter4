@@ -1,5 +1,6 @@
 .. _validation:
 
+##########
 Validation
 ##########
 
@@ -10,6 +11,7 @@ helps minimize the amount of code you'll write.
     :local:
     :depth: 2
 
+********
 Overview
 ********
 
@@ -42,6 +44,7 @@ messages, various control structures are usually placed within the form
 HTML. Form validation, while simple to create, is generally very messy
 and tedious to implement.
 
+************************
 Form Validation Tutorial
 ************************
 
@@ -121,6 +124,10 @@ this code and save it to your **app/Controllers/** folder:
 
 .. literalinclude:: validation/001.php
 
+.. note:: The :ref:`$this->request->is() <incomingrequest-is>` method can be used since v4.3.0.
+    In previous versions, you need to use
+    ``if (strtolower($this->request->getMethod()) !== 'post')``.
+
 The Routes
 ==========
 
@@ -193,6 +200,7 @@ Then add validation rules in the controller (**Form.php**):
 
 If you submit the form you should see the success page or the form with error messages.
 
+*********************
 Config for Validation
 *********************
 
@@ -234,6 +242,7 @@ If you want to use traditional rules, you need to change the rule classes in **a
 
 .. literalinclude:: validation/003.php
 
+*******************
 Loading the Library
 *******************
 
@@ -247,6 +256,7 @@ for including multiple Rulesets, and collections of rules that can be easily reu
 .. note:: You may never need to use this method, as both the :doc:`Controller </incoming/controllers>` and
     the :doc:`Model </models/model>` provide methods to make validation even easier.
 
+************************
 Setting Validation Rules
 ************************
 
@@ -255,8 +265,11 @@ given field, cascading them in order. To set validation rules you
 will use the ``setRule()``, ``setRules()``, or ``withRequest()``
 methods.
 
+Setting a Single Rule
+=====================
+
 setRule()
-=========
+---------
 
 This method sets a single rule. It has the method signature::
 
@@ -275,8 +288,11 @@ the form input name.
     broken in extending classes overriding this method, the child class's method should also be modified
     to remove the typehint.
 
+Setting Multiple Rules
+======================
+
 setRules()
-==========
+----------
 
 Like ``setRule()``, but accepts an array of field names and their rules:
 
@@ -287,6 +303,23 @@ To give a labeled error message you can set up as:
 .. literalinclude:: validation/007.php
 
 .. _validation-withrequest:
+
+Setting Rules for Array Data
+============================
+
+If your data is in a nested associative array, you can use "dot array syntax" to
+easily validate your data:
+
+.. literalinclude:: validation/009.php
+
+You can use the ``*`` wildcard symbol to match any one level of the array:
+
+.. literalinclude:: validation/010.php
+
+"dot array syntax" can also be useful when you have single dimension array data.
+For example, data returned by multi select dropdown:
+
+.. literalinclude:: validation/011.php
 
 withRequest()
 =============
@@ -307,28 +340,41 @@ data to be validated:
     is not HTML form post (``Content-Type: multipart/form-data``),
     or gets data from :ref:`$request->getVar() <incomingrequest-getting-data>`.
 
+***********************
 Working with Validation
 ***********************
 
-Validating Keys that are Arrays
-===============================
+Running Validation
+==================
 
-If your data is in a nested associative array, you can use "dot array syntax" to
-easily validate your data:
+The ``run()`` method runs validation. It has the method signature::
 
-.. literalinclude:: validation/009.php
+    run(?array $data = null, ?string $group = null, ?string $dbGroup = null): bool
 
-You can use the '*' wildcard symbol to match any one level of the array:
+The ``$data`` is an array of data to validate. The optional second parameter
+``$group`` is the :ref:`predefined group of rules <validation-array>` to apply.
+The optional third parameter ``$dbGroup`` is the database group to use.
 
-.. literalinclude:: validation/010.php
+This method returns true if the validation is successful.
 
-"dot array syntax" can also be useful when you have single dimension array data.
-For example, data returned by multi select dropdown:
+.. literalinclude:: validation/043.php
 
-.. literalinclude:: validation/011.php
+Running Multiple Validations
+============================
 
-Validate 1 Value
-================
+.. note:: ``run()`` method will not reset error state. Should a previous run fail,
+   ``run()`` will always return false and ``getErrors()`` will return
+   all previous errors until explicitly reset.
+
+If you intend to run multiple validations, for instance on different data sets or with different
+rules after one another, you might need to call ``$validation->reset()`` before each run to get rid of
+errors from previous run. Be aware that ``reset()`` will invalidate any data, rule or custom error
+you previously set, so ``setRules()``, ``setRuleGroup()`` etc. need to be repeated:
+
+.. literalinclude:: validation/019.php
+
+Validating 1 Value
+==================
 
 Validate one value against a rule:
 
@@ -344,7 +390,7 @@ the validation.
 
 .. _validation-array:
 
-How to save your rules
+How to Save Your Rules
 ----------------------
 
 To store your validation rules, simply create a new public property in the ``Config\Validation``
@@ -353,9 +399,15 @@ rules. As shown earlier, the validation array will have this prototype:
 
 .. literalinclude:: validation/013.php
 
+How to Specify Rule Group
+-------------------------
+
 You can specify the group to use when you call the ``run()`` method:
 
 .. literalinclude:: validation/014.php
+
+How to Save Error Messages
+--------------------------
 
 You can also store custom error messages in this configuration file by naming the
 property the same as the group, and appended with ``_errors``. These will automatically
@@ -367,7 +419,7 @@ Or pass all settings in an array:
 
 .. literalinclude:: validation/016.php
 
-See below for details on the formatting of the array.
+See :ref:`validation-custom-errors` for details on the formatting of the array.
 
 Getting & Setting Rule Groups
 -----------------------------
@@ -383,20 +435,6 @@ This method gets a rule group from the validation configuration:
 This method sets a rule group from the validation configuration to the validation service:
 
 .. literalinclude:: validation/018.php
-
-Running Multiple Validations
-============================
-
-.. note:: ``run()`` method will not reset error state. Should a previous run fail,
-   ``run()`` will always return false and ``getErrors()`` will return
-   all previous errors until explicitly reset.
-
-If you intend to run multiple validations, for instance on different data sets or with different
-rules after one another, you might need to call ``$validation->reset()`` before each run to get rid of
-errors from previous run. Be aware that ``reset()`` will invalidate any data, rule or custom error
-you previously set, so ``setRules()``, ``setRuleGroup()`` etc. need to be repeated:
-
-.. literalinclude:: validation/019.php
 
 Validation Placeholders
 =======================
@@ -422,13 +460,14 @@ So it will ignore the row in the database that has ``id=4`` when it verifies the
 This can also be used to create more dynamic rules at runtime, as long as you take care that any dynamic
 keys passed in don't conflict with your form data.
 
-Working With Errors
+*******************
+Working with Errors
 *******************
 
 The Validation library provides several methods to help you set error messages, provide
 custom error messages, and retrieve one or more errors to display.
 
-By default, error messages are derived from language strings in ``system/Language/en/Validation.php``, where
+By default, error messages are derived from language strings in **system/Language/en/Validation.php**, where
 each rule has an entry.
 
 .. _validation-custom-errors:
@@ -463,11 +502,11 @@ at least 6 characters."
 
 .. note:: When using label-style error messages, if you pass the second parameter to ``setRules()``, it will be overwritten with the value of the first parameter.
 
-Translation Of Messages And Validation Labels
+Translation of Messages and Validation Labels
 =============================================
 
 To use translated strings from language files, we can simply use the dot syntax.
-Let's say we have a file with translations located here: ``app/Languages/en/Rules.php``.
+Let's say we have a file with translations located here: **app/Languages/en/Rules.php**.
 We can simply use the language lines defined in this file, like this:
 
 .. literalinclude:: validation/025.php
@@ -526,8 +565,28 @@ When specifying a field with a wildcard, all errors matching the mask will be ch
 
 .. literalinclude:: validation/029.php
 
+.. _validation-redirect-and-validation-errors:
+
+Redirect and Validation Errors
+==============================
+
+PHP shares nothing between requests. So when you redirect if a validation fails,
+there will be no validation errors in the redirected request because the validation
+has run in the previous request.
+
+In that case, you need to use Form helper function :php:func:`validation_errors()`,
+:php:func:`validation_list_errors()` and :php:func:`validation_show_error()`.
+These functions check the validation errors that are stored in the session.
+
+To store the validation errors in the session, you need to use ``withInput()``
+with :php:func:`redirect() <redirect>`:
+
+.. literalinclude:: validation/042.php
+   :lines: 2-
+
 .. _validation-customizing-error-display:
 
+*************************
 Customizing Error Display
 *************************
 
@@ -558,7 +617,7 @@ error message. This is used with the ``showError()`` method where a field must b
 Configuration
 =============
 
-Once you have your views created, you need to let the Validation library know about them. Open ``Config/Validation.php``.
+Once you have your views created, you need to let the Validation library know about them. Open **app/Config/Validation.php**.
 Inside, you'll find the ``$templates`` property where you can list as many custom views as you want, and provide an
 short alias they can be referenced by. If we were to add our example file from above, it would look something like:
 
@@ -576,8 +635,11 @@ right after the name of the field the error should belong to::
 
     <?= $validation->showError('username', 'my_single') ?>
 
+*********************
 Creating Custom Rules
 *********************
+
+.. _validation-using-rule-classes:
 
 Using Rule Classes
 ==================
@@ -588,7 +650,7 @@ autoloader can find it. These files are called RuleSets.
 Adding a RuleSet
 ----------------
 
-To add a new RuleSet, edit **Config/Validation.php** and
+To add a new RuleSet, edit **app/Config/Validation.php** and
 add the new file to the ``$ruleSets`` array:
 
 .. literalinclude:: validation/033.php
@@ -599,13 +661,13 @@ shown above. The primary benefit here is that it provides some extra navigation 
 Creating a Rule Class
 ---------------------
 
-Within the file itself, each method is a rule and must accept a string as the first parameter, and must return
+Within the file itself, each method is a rule and must accept a value to validate as the first parameter, and must return
 a boolean true or false value signifying true if it passed the test or false if it did not:
 
 .. literalinclude:: validation/034.php
 
-By default, the system will look within ``CodeIgniter\Language\en\Validation.php`` for the language strings used
-within errors. In custom rules, you may provide error messages by accepting a ``$error`` variable by reference in the
+By default, the system will look within **system/Language/en/Validation.php** for the language strings used
+within errors. In custom rules, you may provide error messages by accepting a ``&$error`` variable by reference in the
 second parameter:
 
 .. literalinclude:: validation/035.php
@@ -620,13 +682,13 @@ Your new custom rule could now be used just like any other rule:
 Allowing Parameters
 -------------------
 
-If your method needs to work with parameters, the function will need a minimum of three parameters: the string to validate,
+If your method needs to work with parameters, the function will need a minimum of three parameters: the value to validate,
 the parameter string, and an array with all of the data that was submitted the form. The ``$data`` array is especially handy
 for rules like ``required_with`` that needs to check the value of another submitted field to base its result on:
 
 .. literalinclude:: validation/037.php
 
-Custom errors can be returned as the fourth parameter, just as described above.
+Custom errors can be returned as the fourth parameter ``&$error``, just as described above.
 
 .. _validation-using-closure-rule:
 
@@ -650,6 +712,7 @@ Or you can use the following parameters:
 
 .. literalinclude:: validation/041.php
 
+***************
 Available Rules
 ***************
 

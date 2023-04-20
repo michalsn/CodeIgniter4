@@ -30,8 +30,6 @@ use InvalidArgumentException;
  * Additional methods to make a PSR-7 Response class
  * compliant with the framework's own ResponseInterface.
  *
- * @property array $statusCodes
- *
  * @see https://github.com/php-fig/http-message/blob/master/src/ResponseInterface.php
  */
 trait ResponseTrait
@@ -345,8 +343,8 @@ trait ResponseTrait
      */
     public function noCache()
     {
-        $this->removeHeader('Cache-control');
-        $this->setHeader('Cache-control', ['no-store', 'max-age=0', 'no-cache']);
+        $this->removeHeader('Cache-Control');
+        $this->setHeader('Cache-Control', ['no-store', 'max-age=0', 'no-cache']);
 
         return $this;
     }
@@ -399,7 +397,7 @@ trait ResponseTrait
             unset($options['last-modified']);
         }
 
-        $this->setHeader('Cache-control', $options);
+        $this->setHeader('Cache-Control', $options);
 
         return $this;
     }

@@ -140,6 +140,13 @@ visit the following sites:
 Turning CSP On
 --------------
 
+.. important:: The :ref:`Debug Toolbar <the-debug-toolbar>` may use Kint, which
+    outputs inline scripts. Therefore, when CSP is turned on, CSP nonce is
+    automatically output for the Debug Toolbar. However, if you are not using
+    CSP nonce, this will change the CSP header to something you do not intend,
+    and it will behave differently than in production; if you want to verify CSP
+    behavior, turn off the Debug Toolbar.
+
 By default, support for this is off. To enable support in your application, edit the ``CSPEnabled`` value in
 **app/Config/App.php**:
 
@@ -163,7 +170,7 @@ call basis, by providing an optional second parameter to the adding method call.
 Runtime Configuration
 ---------------------
 
-If your application needs to make changes at run-time, you can access the instance at ``$this->response->CSP`` in your controllers. The
+If your application needs to make changes at run-time, you can access the instance at ``$this->response->getCSP()`` in your controllers. The
 class holds a number of methods that map pretty clearly to the appropriate header value that you need to set.
 Examples are shown below, with different combinations of parameters, though all accept either a directive
 name or an array of them:
@@ -173,7 +180,7 @@ name or an array of them:
 The first parameter to each of the "add" methods is an appropriate string value,
 or an array of them.
 
-The ``reportOnly`` method allows you to specify the default reporting treatment
+The ``reportOnly()`` method allows you to specify the default reporting treatment
 for subsequent sources, unless over-ridden. For instance, you could specify
 that youtube.com was allowed, and then provide several allowed but reported sources:
 
@@ -207,7 +214,7 @@ life, and is most secure when generated on the fly. To make this simple, you can
 
 If you don't like this auto replacement functionality, you can turn it off with setting ``$autoNonce = false`` in **app/Config/ContentSecurityPolicy.php**.
 
-In this case, you can use the functions, ``csp_script_nonce()`` and ``csp_style_nonce()``::
+In this case, you can use the functions, :php:func:`csp_script_nonce()` and :php:func:`csp_style_nonce()`::
 
     // Original
     <script <?= csp_script_nonce() ?>>
@@ -366,7 +373,7 @@ The methods provided by the parent class that are available are:
 
         :param array|Cookie|string $name: Cookie name or an array of parameters or an instance of ``CodeIgniter\Cookie\Cookie``
         :param string $value: Cookie value
-        :param int $expire: Cookie expiration time in seconds
+        :param int $expire: Cookie expiration time in seconds. If set to ``0`` the cookie will only last as long as the browser is open
         :param string $domain: Cookie domain
         :param string $path: Cookie path
         :param string $prefix: Cookie name prefix. If set to ``''``, the default value from **app/Config/Cookie.php** will be used

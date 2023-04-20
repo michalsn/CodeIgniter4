@@ -36,11 +36,11 @@ use Rector\EarlyReturn\Rector\If_\ChangeIfElseValueAssignToEarlyReturnRector;
 use Rector\EarlyReturn\Rector\If_\RemoveAlwaysElseRector;
 use Rector\EarlyReturn\Rector\Return_\PreparedValueToEarlyReturnRector;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
-use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
 use Rector\Php70\Rector\FuncCall\RandomFunctionRector;
 use Rector\Php71\Rector\FuncCall\CountOnNullRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php73\Rector\FuncCall\StringifyStrNeedlesRector;
+use Rector\PHPUnit\Rector\MethodCall\AssertPropertyExistsRector;
 use Rector\PHPUnit\Rector\MethodCall\GetMockBuilderGetMockToCreateMockRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Privatization\Rector\Property\PrivatizeFinalClassPropertyRector;
@@ -75,13 +75,15 @@ return static function (RectorConfig $rectorConfig): void {
 
     // is there a file you need to skip?
     $rectorConfig->skip([
-        __DIR__ . '/app/Views',
         __DIR__ . '/system/Debug/Toolbar/Views/toolbar.tpl.php',
         __DIR__ . '/system/ThirdParty',
         __DIR__ . '/tests/system/Config/fixtures',
+        __DIR__ . '/tests/system/Filters/fixtures',
         __DIR__ . '/tests/_support',
         JsonThrowOnErrorRector::class,
         StringifyStrNeedlesRector::class,
+        // assertObjectHasAttribute() is deprecated
+        AssertPropertyExistsRector::class,
 
         RemoveUnusedPrivateMethodRector::class => [
             // private method called via getPrivateMethodInvoker
@@ -105,9 +107,6 @@ return static function (RectorConfig $rectorConfig): void {
 
         // sometime too detail
         CountOnNullRector::class,
-
-        // may not be unitialized on purpose
-        AddDefaultValueForUndefinedVariableRector::class,
 
         // use mt_rand instead of random_int on purpose on non-cryptographically random
         RandomFunctionRector::class,

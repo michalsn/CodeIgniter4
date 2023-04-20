@@ -1,6 +1,6 @@
-#############################
-Upgrading from 4.2.9 to 4.3.0
-#############################
+##############################
+Upgrading from 4.2.12 to 4.3.0
+##############################
 
 Please refer to the upgrade instructions corresponding to your installation method.
 
@@ -11,6 +11,21 @@ Please refer to the upgrade instructions corresponding to your installation meth
 .. contents::
     :local:
     :depth: 2
+
+Composer Version
+****************
+
+.. important:: If you use Composer, CodeIgniter v4.3.0 requires
+    Composer 2.0.14 or later.
+
+If you are using older version of Composer, upgrade your ``composer`` tool,
+and delete the **vendor/** directory, and run ``composer update`` again.
+
+The procedure, for example, is as follows::
+
+    > composer self-update
+    > rm -rf vendor/
+    > composer update
 
 Mandatory File Changes
 **********************
@@ -33,7 +48,23 @@ The following files received significant changes and
 Config Files
 ============
 
-- **app/Config/Kint.php** has been updated for Kint 5.0. You need to replace ``Kint\Renderer\Renderer`` with ``Kint\Renderer\AbstractRenderer`` and replace ``Renderer::SORT_FULL`` with ``AbstractRenderer::SORT_FULL``.
+app/Config/Kint.php
+-------------------
+
+- **app/Config/Kint.php** has been updated for Kint 5.0.
+- You need to replace:
+
+    - ``Kint\Renderer\Renderer`` with ``Kint\Renderer\AbstractRenderer``
+    - ``Renderer::SORT_FULL`` with ``AbstractRenderer::SORT_FULL``
+
+app/Config/Exceptions.php
+-------------------------
+
+- If you are using PHP 8.2, you need to add new properties ``$logDeprecations`` and ``$deprecationLogLevel``.
+
+Mock Config Classes
+-------------------
+
 - If you are using the following Mock Config classes in testing, you need to update the corresponding Config files in **app/Config**:
 
     - ``MockAppConfig`` (``Config\App``)
@@ -41,6 +72,31 @@ Config Files
     - ``MockSecurityConfig`` (``Config\Security``)
 
 - Add **types** to the properties in these Config classes. You may need to fix the property values to match the property types.
+
+composer.json
+=============
+
+If you installed CodeIgnter manually, and are using Composer,
+you need to remove the following lines, and run ``composer update``.
+
+.. code-block:: text
+
+    {
+        ...
+        "require": {
+            ...
+            "kint-php/kint": "^4.2",  <-- Remove this line
+            ...
+        },
+        ...
+        "scripts": {
+            "post-update-cmd": [
+                "CodeIgniter\\ComposerScripts::postUpdate"  <-- Remove this line
+            ],
+            "test": "phpunit"
+        },
+        ...
+    }
 
 Breaking Changes
 ****************
@@ -141,12 +197,13 @@ The way error and output streams are captured has changed. Now instead of::
     protected function setUp(): void
     {
         CITestStreamFilter::$buffer = '';
-        $this->stream_filter        = stream_filter_append(STDOUT, 'CITestStreamFilter');
+        $this->streamFilter         = stream_filter_append(STDOUT, 'CITestStreamFilter');
+        $this->streamFilter         = stream_filter_append(STDERR, 'CITestStreamFilter');
     }
 
     protected function tearDown(): void
     {
-        stream_filter_remove($this->stream_filter);
+        stream_filter_remove($this->streamFilter);
     }
 
 need to use::
@@ -157,11 +214,13 @@ need to use::
     {
         CITestStreamFilter::registration();
         CITestStreamFilter::addOutputFilter();
+        CITestStreamFilter::addErrorFilter();
     }
 
     protected function tearDown(): void
     {
         CITestStreamFilter::removeOutputFilter();
+        CITestStreamFilter::removeErrorFilter();
     }
 
 Or use the trait ``CodeIgniter\Test\StreamFilterTrait``. See :ref:`testing-cli-output`.
@@ -265,7 +324,7 @@ Config
     - The property ``$html5`` to determine whether to remove the solidus (``/``) character for void HTML
       elements (e.g. ``<input>``) is added, and set to ``true`` by default for HTML5 compatibility.
 - app/Config/Encryption.php
-    - The new property ``$rawData``,  ``$encryptKeyInfo``, and ``$authKeyInfo`` are added for for CI3
+    - The new property ``$rawData``,  ``$encryptKeyInfo``, and ``$authKeyInfo`` are added for CI3
       Encryption compatibility. See :ref:`encryption-compatible-with-ci3`.
 - app/Config/Exceptions.php
     - Two additional public properties were added: ``$logDeprecations`` and ``$deprecationLogLevel``.
@@ -291,13 +350,59 @@ Config
 - app/Config/Validation.php
     - The default Validation Rules have been changed to Strict Rules for better security. See :ref:`validation-traditional-and-strict-rules`.
 
+View Files
+----------
+
+The following view files have been changed to HTML5 compatible tags.
+Also, error messages are now defined in the **Errors** language file.
+
+- app/Views/errors/html/error_404.php
+- app/Views/errors/html/error_exception.php
+- app/Views/errors/html/production.php
+- app/Views/welcome_message.php
+
 All Changes
 ===========
 
 This is a list of all files in the **project space** that received changes;
-many will be simple comments or formatting that have no effect on the runtime:
+many will be simple comments or formatting that have no effect on the runtime.
+All atomic type properties in ``Config`` classes have been typed:
 
-- app/Config/DocTypes.php
-- app/Config/Exceptions.php
-- app/Config/Routes.php
-- spark
+*   app/Config/App.php
+*   app/Config/Autoload.php
+*   app/Config/CURLRequest.php
+*   app/Config/Cache.php
+*   app/Config/ContentSecurityPolicy.php
+*   app/Config/Cookie.php
+*   app/Config/Database.php
+*   app/Config/DocTypes.php
+*   app/Config/Email.php
+*   app/Config/Encryption.php
+*   app/Config/Exceptions.php
+*   app/Config/Feature.php
+*   app/Config/Filters.php
+*   app/Config/Format.php
+*   app/Config/Generators.php
+*   app/Config/Honeypot.php
+*   app/Config/Images.php
+*   app/Config/Kint.php
+*   app/Config/Logger.php
+*   app/Config/Migrations.php
+*   app/Config/Mimes.php
+*   app/Config/Modules.php
+*   app/Config/Pager.php
+*   app/Config/Paths.php
+*   app/Config/Routes.php
+*   app/Config/Security.php
+*   app/Config/Session.php
+*   app/Config/Toolbar.php
+*   app/Config/UserAgents.php
+*   app/Config/Validation.php
+*   app/Views/errors/html/error_404.php
+*   app/Views/errors/html/error_exception.php
+*   app/Views/errors/html/production.php
+*   app/Views/welcome_message.php
+*   composer.json
+*   env
+*   phpunit.xml.dist
+*   spark

@@ -889,6 +889,8 @@ final class RouteCollectionTest extends CIUnitTestCase
     {
         $routes = $this->getCollector();
 
+        // @TODO Do not put any placeholder after (:any).
+        //       Because the number of parameters passed to the controller method may change.
         $routes->add('path/(:any)/to/(:num)', 'myController::goto/$1/$2', ['as' => 'namedRoute']);
 
         $match = $routes->reverseRoute('namedRoute', 'string', 13);
@@ -900,6 +902,8 @@ final class RouteCollectionTest extends CIUnitTestCase
     {
         $routes = $this->getCollector();
 
+        // @TODO Do not put any placeholder after (:any).
+        //       Because the number of parameters passed to the controller method may change.
         $routes->add('{locale}/path/(:any)/to/(:num)', 'myController::goto/$1/$2', ['as' => 'namedRoute']);
 
         $match = $routes->reverseRoute('namedRoute', 'string', 13);
@@ -1778,15 +1782,16 @@ final class RouteCollectionTest extends CIUnitTestCase
     public function testGetRegisteredControllersReturnsAllControllers()
     {
         $collection = $this->getCollector();
-        $collection->get('test', '\App\Controllers\Hello::get');
-        $collection->post('test', '\App\Controllers\Hello::post');
-        $collection->post('hello', '\App\Controllers\Test::hello');
+        $collection->get('test', '\App\Controllers\HelloGet::get');
+        $collection->post('test', '\App\Controllers\HelloPost::post');
+        $collection->post('hello', '\App\Controllers\TestPost::hello');
 
         $routes = $collection->getRegisteredControllers('*');
 
         $expects = [
-            '\App\Controllers\Hello',
-            '\App\Controllers\Test',
+            '\App\Controllers\HelloGet',
+            '\App\Controllers\HelloPost',
+            '\App\Controllers\TestPost',
         ];
         $this->assertSame($expects, $routes);
     }

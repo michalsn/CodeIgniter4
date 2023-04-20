@@ -728,9 +728,15 @@ class BaseBuilder
      */
     protected function whereHaving(string $qbKey, $key, $value = null, string $type = 'AND ', ?bool $escape = null)
     {
+        $rawSqlOnly = false;
+
         if ($key instanceof RawSql) {
-            $keyValue = [(string) $key => $key];
-            $escape   = false;
+            if ($value === null) {
+                $keyValue   = [(string) $key => $key];
+                $rawSqlOnly = true;
+            } else {
+                $keyValue = [(string) $key => $value];
+            }
         } elseif (! is_array($key)) {
             $keyValue = [$key => $value];
         } else {
@@ -745,7 +751,7 @@ class BaseBuilder
         foreach ($keyValue as $k => $v) {
             $prefix = empty($this->{$qbKey}) ? $this->groupGetType('') : $this->groupGetType($type);
 
-            if ($v instanceof RawSql) {
+            if ($rawSqlOnly === true) {
                 $k  = '';
                 $op = '';
             } elseif ($v !== null) {
@@ -755,9 +761,9 @@ class BaseBuilder
                     $k = trim($k);
 
                     end($op);
-
                     $op = trim(current($op));
 
+                    // Does the key end with operator?
                     if (substr($k, -strlen($op)) === $op) {
                         $k  = rtrim(substr($k, 0, -strlen($op)));
                         $op = " {$op}";
@@ -777,7 +783,15 @@ class BaseBuilder
             } elseif (! $this->hasOperator($k) && $qbKey !== 'QBHaving') {
                 // value appears not to have been set, assign the test to IS NULL
                 $op = ' IS NULL';
-            } elseif (preg_match('/\s*(!?=|<>|IS(?:\s+NOT)?)\s*$/i', $k, $match, PREG_OFFSET_CAPTURE)) {
+            } elseif (
+                // The key ends with !=, =, <>, IS, IS NOT
+                preg_match(
+                    '/\s*(!?=|<>|IS(?:\s+NOT)?)\s*$/i',
+                    $k,
+                    $match,
+                    PREG_OFFSET_CAPTURE
+                )
+            ) {
                 $k  = substr($k, 0, $match[0][1]);
                 $op = $match[1][0] === '=' ? ' IS NULL' : ' IS NOT NULL';
             } else {
@@ -1423,6 +1437,7 @@ class BaseBuilder
      */
     public function orderBy(string $orderBy, string $direction = '', ?bool $escape = null)
     {
+        $qbOrderBy = [];
         if (empty($orderBy)) {
             return $this;
         }
@@ -2006,9 +2021,9 @@ class BaseBuilder
     /**
      * Sets update fields for upsert, update
      *
-     * @param string|string[] $set
-     * @param bool            $addToDefault adds update fields to the default ones
-     * @param array|null      $ignore       ignores items in set
+     * @param RawSql[]|string|string[] $set
+     * @param bool                     $addToDefault adds update fields to the default ones
+     * @param array|null               $ignore       ignores items in set
      *
      * @return $this
      */
@@ -3067,6 +3082,10 @@ class BaseBuilder
                     continue;
                 }
 
+                if ($qbkey instanceof RawSql) {
+                    continue;
+                }
+
                 if ($qbkey['condition'] instanceof RawSql) {
                     $qbkey = $qbkey['condition'];
 
@@ -3208,6 +3227,10 @@ class BaseBuilder
             return $object;
         }
 
+        if ($object instanceof RawSql) {
+            throw new InvalidArgumentException('RawSql "' . $object . '" cannot be used here.');
+        }
+
         $array = [];
 
         foreach (get_object_vars($object) as $key => $val) {
@@ -3274,7 +3297,7 @@ class BaseBuilder
      *
      * @return $this
      */
-    public function resetQueryAsData()
+    public function resetQuery()
     {
         $this->resetSelect();
         $this->resetWrite();
@@ -3366,16 +3389,16 @@ class BaseBuilder
                 : '';
             $this->pregOperators = [
                 '\s*(?:<|>|!)?=\s*', // =, <=, >=, !=
-                '\s*<>?\s*', // <, <>
-                '\s*>\s*', // >
-                '\s+IS NULL', // IS NULL
-                '\s+IS NOT NULL', // IS NOT NULL
-                '\s+EXISTS\s*\(.*\)', // EXISTS(sql)
+                '\s*<>?\s*',         // <, <>
+                '\s*>\s*',           // >
+                '\s+IS NULL',             // IS NULL
+                '\s+IS NOT NULL',         // IS NOT NULL
+                '\s+EXISTS\s*\(.*\)',     // EXISTS (sql)
                 '\s+NOT EXISTS\s*\(.*\)', // NOT EXISTS(sql)
-                '\s+BETWEEN\s+', // BETWEEN value AND value
-                '\s+IN\s*\(.*\)', // IN(list)
-                '\s+NOT IN\s*\(.*\)', // NOT IN (list)
-                '\s+LIKE\s+\S.*(' . $_les . ')?', // LIKE 'expr'[ ESCAPE '%s']
+                '\s+BETWEEN\s+',          // BETWEEN value AND value
+                '\s+IN\s*\(.*\)',         // IN (list)
+                '\s+NOT IN\s*\(.*\)',     // NOT IN (list)
+                '\s+LIKE\s+\S.*(' . $_les . ')?',     // LIKE 'expr'[ ESCAPE '%s']
                 '\s+NOT LIKE\s+\S.*(' . $_les . ')?', // NOT LIKE 'expr'[ ESCAPE '%s']
             ];
         }
@@ -3398,13 +3421,18 @@ class BaseBuilder
         $whereKey = trim($whereKey);
 
         $pregOperators = [
-            '\s*(?:<|>|!)?=', // =, <=, >=, !=
-            '\s*<>?',         // <, <>
-            '\s*>',           // >
-            '\s+IS NULL',     // IS NULL
-            '\s+IS NOT NULL', // IS NOT NULL
-            '\s+LIKE',        // LIKE
-            '\s+NOT LIKE',    // NOT LIKE
+            '\s*(?:<|>|!)?=',         // =, <=, >=, !=
+            '\s*<>?',                 // <, <>
+            '\s*>',                   // >
+            '\s+IS NULL',             // IS NULL
+            '\s+IS NOT NULL',         // IS NOT NULL
+            '\s+EXISTS\s*\(.*\)',     // EXISTS (sql)
+            '\s+NOT EXISTS\s*\(.*\)', // NOT EXISTS (sql)
+            '\s+BETWEEN\s+',          // BETWEEN value AND value
+            '\s+IN\s*\(.*\)',         // IN (list)
+            '\s+NOT IN\s*\(.*\)',     // NOT IN (list)
+            '\s+LIKE',                // LIKE
+            '\s+NOT LIKE',            // NOT LIKE
         ];
 
         return preg_match_all(
@@ -3456,7 +3484,7 @@ class BaseBuilder
      */
     protected function cleanClone()
     {
-        return (clone $this)->from([], true)->resetQueryAsData();
+        return (clone $this)->from([], true)->resetQuery();
     }
 
     /**
