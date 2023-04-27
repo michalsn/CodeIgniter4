@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - 'develop'
-      - 'feat/dark-mode-preview
+      - 'feat/dark-mode-preview'
     paths:
       - 'user_guide_src/**'
 
