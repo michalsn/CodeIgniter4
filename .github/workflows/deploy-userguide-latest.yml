@@ -12,6 +12,7 @@ on:
       - 'feat/dark-mode-preview'
     paths:
       - 'user_guide_src/**'
+      - '.github/workflows/deploy-userguide-latest.yml'
 
 permissions:
   contents: read
@@ -71,4 +72,4 @@ jobs:
         with:
           branch: gh-pages
           directory: gh-pages
-          github_token: ${{ secrets.ACCESS_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
