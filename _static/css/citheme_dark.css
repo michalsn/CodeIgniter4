@@ -86,16 +86,16 @@
         color: rgb(192, 186, 178);
     }
 
-    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
-        color: #ccc !important;
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.citation):not(.glossary):not(.simple) > dt {
+        color: #ccc;
     }
 
-    html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) dl:not(.field-list) > dt {
+    html.writer-html4 .rst-content dl:not(.docutils) dl:not(.field-list) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.citation):not(.glossary):not(.simple) dl:not(.field-list) > dt {
         color: #96928c;
         border-left: 3px solid #3f4547;
     }
 
-    html.writer-html4 .rst-content dl:not(.docutils) .optional, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) .optional {
+    html.writer-html4 .rst-content dl:not(.docutils) .optional, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.citation):not(.glossary):not(.simple) .optional {
         color: #c0bab2;
     }
 
@@ -216,11 +216,11 @@
         border: 1px solid rgb(63, 69, 71);
     }
 
-    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.citation):not(.glossary):not(.simple) > dt {
         border-top: solid 3px #b13a10;
     }
 
-    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+    html.writer-html4 .rst-content dl:not(.docutils) > dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.citation):not(.glossary):not(.simple) > dt {
         background: #282b2d;
     }
 
