@@ -33,7 +33,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: 'pypy3.12'
+          python-version: '3.12'
+          architecture: 'x64'
+        env:
+          AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
 
       - name: Detect usage of tabs in RST files
         run: php utils/check_tabs_in_rst.php
