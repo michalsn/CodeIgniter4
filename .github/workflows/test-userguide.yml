@@ -9,6 +9,10 @@ on:
     paths:
       - 'user_guide_src/**'
       - '.github/workflows/test-userguide.yml'
+  push:
+    paths:
+      - 'user_guide_src/**'
+      - '.github/workflows/test-userguide.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
