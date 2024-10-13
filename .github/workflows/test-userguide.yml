@@ -46,4 +46,4 @@ jobs:
       - uses: ammaraskar/sphinx-action@0.4
         with:
           docs-folder: user_guide_src
-          build-command: 'python -m sphinx -b html -W --keep-going -w /tmp/sphinx-log user_guide_src build/html'
+          build-command: 'python -m sphinx -b html -W --keep-going -w /tmp/sphinx-log'
